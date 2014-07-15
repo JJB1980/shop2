@@ -1,0 +1,32 @@
+<?php
+
+include_once "connect.php";
+include_once "sqlUtils.php";
+include_once "utils.php";
+
+$action = $_REQUEST["action"];
+$id = $_REQUEST["id"];
+
+if ($id == "") {
+	echo "No ID.";
+	exit;
+}
+
+//echo $id."|".$amt;
+
+if ($action == "updateAvailableItems") {
+	$amt = $_REQUEST["amt"];
+	if (!is_whole_number($amt)) {
+		echo "Not a valid number.";
+		exit;
+	}
+	$sql = "update Inventory set AvailableItems = ".$amt." where ID = ".$id;
+	runSql($sql);
+	echo "Available Items Updated.";
+}
+
+function is_whole_number($var){
+  return (is_numeric($var)&&(intval($var)==floatval($var)));
+}
+
+?>

@@ -1,0 +1,19 @@
+'use strict';
+
+/* Services */
+
+angular.module('StoreApp.services', [])
+  .factory('storeServices', function($http) {
+
+    var storeAPI = {};
+
+    storeAPI.getMenu = function() {
+      return $http({
+        method: 'POST', 
+        url: 'app/menu.php'
+      });
+    }	
+
+
+    return storeAPI;
+  });

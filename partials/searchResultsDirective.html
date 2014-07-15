@@ -1,0 +1,44 @@
+
+   
+<p>
+<span  data-ng-show="searchType == 1">
+<input id="searchValue" type="text" data-ng-model="searchText"
+       data-ng-change="loadSearchResults()" placeholder="Search..."/>&nbsp;&nbsp;&nbsp;
+</span>
+{{searchResults.Meta}} - Results: {{searchResults.ResultsCount}} - Display Results:&nbsp;
+<select data-ng-model="pageSize" class='combobox' data-ng-change="saveResultLimit();">
+<option data-ng-repeat="opt in resultOptions" value="{{opt.value}}"
+        data-ng-selected="isResultLimit(opt.value)">{{opt.option}}
+</option>
+</select>
+
+</p>
+<pagination boundary-links="true" data-ng-change="pageChanged()" items-per-page="pageSize"
+            total-items="searchResults.ResultsCount" data-ng-model="currentPage"
+            num-pages="searchResults.PageCount" max-size="maxSize"
+            class="pagination-sm" previous-text="&lsaquo;"
+            next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+
+<br/>
+<table class="itemsTable">
+<thead>
+  <tr><th>#</th></th><th>Store Code</th><th>Name</th><th>Description</th><th>Price</th><th>Available</th><th></th></tr>
+</thead>
+<tbody>
+  <tr data-ng-repeat="item in pageView">
+    <td>{{item.Ord}}</td>
+    <td>{{item.Code}}</td>
+    <td>
+      <img src="{{item.imgSrc}}" height="{{item.imgHeight}}" width="{{item.imgWidth}}" />
+      <a href="#/stockItem/{{item.ID}}">
+      &nbsp;&nbsp;{{item.Name}}
+    </a>
+  </td>
+    <td>{{item.Description}}</td>
+    <td>{{item.Price | currency}}</td>
+    <td>{{item.Available}}</td>
+    <td><button type="button" class="btn btn-sm btn-primary" data-ng-click="addToCart(item.ID)">Add to cart</button></td>
+  </tr>
+</tbody>
+</table>
+             

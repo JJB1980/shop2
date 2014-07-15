@@ -1,0 +1,32 @@
+<input id="searchValue" type="text" ng-model="searchText" ng-change="loadData();" placeholder="Search..."/>
+&nbsp;&nbsp;
+
+<span class=''>Display Results</span> 
+<select ng-model="resultLimit" class='combobox' ng-change="saveResultLimit();">
+<option ng-repeat="opt in resultOptions" value="{{opt.value}}" ng-selected="isResultLimit(opt.value)">{{opt.option}}
+</option>
+</select>
+
+
+
+<br/>
+<table class="itemsTable">
+<thead>
+  <tr><th>ID</th><th>Store Code</th><th>Name</th><th>Description</th><th>Price</th><th>Available</th></tr>
+</thead>
+<tbody>
+  <tr ng-repeat="item in stockList">
+    <td>{{item.ID}}</td>
+    <td>{{item.Code}}</td>
+    <td>
+      <img src="{{item.imgSrc}}" height="{{item.imgHeight}}" width="{{item.imgWidth}}" />
+      <a href="#/stockItem/{{item.ID}}">
+      &nbsp;&nbsp;{{item.Name}}
+    </a>
+  </td>
+    <td>{{item.Description}}</td>
+    <td>{{item.Price | currency}}</td>
+    <td>{{item.Available}}</td>
+  </tr>
+</tbody>
+</table>

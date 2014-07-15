@@ -1,0 +1,46 @@
+
+	<h2>Stock Item</h2>
+
+	<table class="itemTable">
+	<tr><td>ID</td><td>{{stockItem.ID}}</td></tr>
+	<tr><td>Store Code</td><td>{{stockItem.Code}}</td></tr>
+	<tr><td>Name</td><td>{{stockItem.Name}}</td></tr>
+	<tr><td>Description</td><td>{{stockItem.Description}}</td></tr>
+	<tr><td>Price</td><td>{{stockItem.Price | currency}}</td></tr>
+	<tr><td>Available</td><td>{{stockItem.Available}}</td></tr>
+	<tr><td>Manufacturer</td><td>{{stockItem.Manufacturer}}</td></tr>
+	<tr><td>Size</td><td>{{stockItem.Size}}</td></tr>
+	<tr><td>Colour</td><td>{{stockItem.Colour}}</td></tr>
+	<tr><td>Weight</td><td>{{stockItem.Weight}}</td></tr>
+	</table>
+
+	<br/>
+
+ <div id="Carousel" class="carousel slide">
+<ol class="carousel-indicators">
+    <li data-target="Carousel" data-slide-to="0" class="active"></li>
+    <li data-target="Carousel" data-slide-to="1"></li>
+    <li data-target="Carousel" data-slide-to="2"></li>
+    <li data-target="Carousel" data-slide-to="3"></li>
+    <li data-target="Carousel" data-slide-to="4"></li>
+
+</ol>
+<div class="carousel-inner">
+
+    <div data-ng-repeat="image in stockItem.Images" class="item {{ GetCarouselActive($index) }}">
+        <img src="{{image.imgSrc}}" height="{{image.imgHeight}}" width="{{image.imgWidth}}" class="img-responsive">
+    </div>
+
+</div>
+<span class="left carousel-control" data-target="#Carousel" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+</span>
+<span class="right carousel-control" data-target="#Carousel" data-slide="next">
+   <span class="glyphicon glyphicon-chevron-right"></span>
+</span>
+</div>
+
+
+<div data-my-search-results="" data-search-type="3"></div>  
+   
+	

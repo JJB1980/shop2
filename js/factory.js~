@@ -1,0 +1,8 @@
+'user strict';
+
+/* Factories */
+
+angular.module('myApp.Factories', [])
+.factory('stockList', function($http) {
+	var url = "app/stockList.php?q=";
+});

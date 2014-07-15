@@ -1,0 +1,38 @@
+'use strict';
+
+/* Controllers */
+angular.module('StoreApp.controllers', ['ui.bootstrap']).
+controller('menuController', function($scope, storeServices) {
+
+	$scope.menuList = [];
+
+	$scope.loadMenu = function () {
+	 	storeServices.getMenu().success(function (response) {
+	 		$scope.menuList = response;
+	 	});
+	};
+
+	$scope.loadMenu();
+
+}).
+
+controller('homeController', function($scope, storeServices) {
+
+	$scope.homeDetails = [];
+
+	$scope.loadHome = function () {
+	 	storeServices.getMenu().success(function (response) {
+	 		$scope.homeDetails = response;
+	 	});
+	};
+
+	$scope.loadHome();
+
+}).
+
+controller('aboutController', function($scope, storeServices) {
+
+
+
+});
+  

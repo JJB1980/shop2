@@ -1,0 +1,84 @@
+/* app css stylesheet */
+
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+input {
+	border: 1px solid #C2C2D6;
+	padding: 0.15em;
+}
+
+select {
+	border: 1px solid #C2C2D6;
+	padding: 0.2em;
+}
+
+table {
+	margin-top: 1em;
+}
+
+table td, th {
+	padding: 0.5em;
+	border-collapse: collapse;
+	border: 1px solid #E0E0EB;
+}
+
+h3 {
+	font-size: 1em;
+}
+
+h2 {
+	font-size: 2em;
+}
+
+#content {
+	position: relative;
+	top: 1em;
+  margin: 3em;
+}
+
+.itemTable{
+	width: 30em;
+}
+
+.itemTable td:first-child  {
+	color: #9999CC;
+	text-align: right;
+	
+}
+
+.itemsTable {
+	width: 50em;
+}
+
+.itemsTable th {
+	color: #9999CC;	
+	font-weight: normal;
+}
+
+.itemsTable tbody tr:nth-child(odd) {
+	background-color: #F5FAFF;
+}
+
+.itemsTable tbody tr:hover {
+	background-color: #F0F0FF;
+}
+
+.inputTable {
+	margin-bottom: 1em;
+}
+
+.inputTable td {
+	border: none;
+}
+
+.inputTable td:first-child  {
+	color: #9999CC;
+	text-align: right;
+	
+}
+
+#Carousel {
+	width: 40em;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}

@@ -1,0 +1,18 @@
+
+<div>
+        <div class="modal-header">
+            <h2 class="modal-title">Update Available Items</h2>
+        </div>
+        <div class="modal-body">
+            <table class="inputTable">
+            <tr><td>ID:</td><td>{{item.ID}}</td></tr>
+            <tr><td>Name:</td><td>{{item.Name}}</td></tr>
+            <tr><td>Available:</td><td><input type="text" ng-model="item.Available"/></td></tr>            
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">Update</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+
+</div>

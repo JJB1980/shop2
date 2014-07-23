@@ -1,5 +1,14 @@
 <?php
 
+function xs($name) {
+	$temp = "";
+	if (isset($_GET[$name])) {
+	  $temp = $_GET[$name];
+	} else if (isset($POST[$name])) {
+	  $temp = $_POST[$name];
+	}
+	return $temp;
+}
 
 function rv($name) {
 	$val = "";

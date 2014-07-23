@@ -17,6 +17,8 @@ if ($action == "logView") {
 	logView();
 }
 
+closeConns();
+
 function logView() {
 
 	if (isset($_REQUEST['ref']))

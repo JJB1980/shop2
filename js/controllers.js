@@ -3,6 +3,72 @@
 /* Controllers */
 angular.module('StoreApp.controllers', ['ui.bootstrap']).
 
+controller('loginController', function($scope, $rootScope, storeServices) {
+
+	//$scope.categoryList = [];
+	$scope.loggedIn = false;
+	$scope.client = "";
+	
+	$scope.doLogin = function () {
+		console.log($scope.email+"|"+$scope.password);
+	 	storeServices.loginServ($scope.email,$scope.password,0,0,"").success(function (response) {
+			/*
+	 		$scope.system.message = response.message;
+			     */
+			//alert(response.message);
+			if (response.status == "ok") {
+				$scope.loggedIn = true;
+				$rootScope.$broadcast('UPDATE_MENU');
+				$.cookie("customer-token-"+response.client, response.token, { expires: 100 });
+				$.cookie("customer-id-"+response.client, response.ID, { expires: 100 });
+				$rootScope.clientID = response.client;
+				window.location = "#/home";
+			} else {
+				alert(response.message);
+			}
+	 	});
+	};
+
+	$scope.doLogout = function () {
+	 	storeServices.loginServ("","",0,1,"").success(function (response) {
+	 		//alert(response.message);
+			$scope.message = response.message;
+			if (response.status == "ok") {
+				$scope.loggedIn = false;
+				$rootScope.$broadcast('UPDATE_MENU');
+				$.cookie("customer-token-"+response.client, "");
+				$.cookie("customer-id-"+response.client, "");
+			}
+	 	});
+	};
+
+	$scope.autoLogin = function () {
+		if ($scope.loggedIn) {
+			return;
+		}
+	 	storeServices.getClientID().success(function (response) {
+			token = $.cookie("customer-token-"+response.client);
+			if (token == "" || token == undefined) {
+				return;
+			}
+			storeServices.loginServ("","",1,0,token).success(function (response) {
+				//alert(response.message);
+				if (response.status == "ok") {
+					$scope.loggedIn = true;
+					$rootScope.$broadcast('UPDATE_MENU');
+				}
+			});		
+		});
+	};
+
+	$scope.$on('AUTO_LOGIN', function() {
+		console.log("AUTO_LOGIN");
+		$scope.autoLogin();
+	});
+
+	
+}).
+
 controller('categoriesController', function($scope, storeServices) {
 
 	$scope.categoryList = [];
@@ -15,7 +81,9 @@ controller('categoriesController', function($scope, storeServices) {
 	
 	$scope.thisThingClicked = function (cat,subcat1) {
 		//alert(1);
+		//console.log("parse:"+cat+"|"+subcat1);
 		window.location = "#/categories/"+cat+"/"+subcat1;
+		//$(window).trigger("click");
 	};
 	
 	$scope.loadCategories();
@@ -33,12 +101,17 @@ controller('menuController', function($scope, storeServices) {
 	 		$scope.menuList = response;
 	 	});
 	};
-	
+
+	$scope.$on('UPDATE_MENU', function() {
+		//alert("update_menu");
+	      $scope.loadMenu();
+	});
+
 	$scope.loadMenu();
 
 }).
 
-controller('homeController', function($scope, $sce, storeServices) {
+controller('homeController', function($scope, $sce, $rootScope, storeServices) {
 
 	$scope.homeDetails = [];	
 	$scope.pageClass = "page-home";
@@ -51,6 +124,10 @@ controller('homeController', function($scope, $sce, storeServices) {
 
 	$scope.returnHomeMessage = function () {
 		return $sce.trustAsHtml($scope.homeDetails.message);
+	}
+
+	$scope.autoLogin = function () {
+		$rootScope.$broadcast('AUTO_LOGIN');
 	}
 	
 	$scope.loadHome();
@@ -97,7 +174,8 @@ controller('stockItemController', function($scope, $routeParams, storeServices) 
 	$scope.id = $routeParams.id;
 	$scope.stockItem = null;
 	$scope.myInterval = 3000;
-
+	$scope.stockItem = null;
+	
 	storeServices.getStockItem($scope.id).success(function (response) {
 		$scope.stockItem = response;
 	
@@ -106,8 +184,11 @@ controller('stockItemController', function($scope, $routeParams, storeServices) 
 		if (isNaN(ref))
 			ref = "";
 		var url = "app/logClient.php?action=doit&ref="+ref;
-		ref = serverGet(url);	
-		$.cookie("client-id", ref, { expires: 1 });
+		storeServices.serverGet(url).success(function (response) {
+			ref = response;
+			$.cookie("client-id", ref, { expires: 1 });
+		});
+		
 
 	});
   

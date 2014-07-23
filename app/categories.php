@@ -3,6 +3,7 @@
 include_once "connect.php";
 include_once "sqlUtils.php";
 include_once "utils.php";
+include_once "restUtils.php";
 
 $actMnu=0;
 
@@ -48,7 +49,10 @@ while ($r1 = row($res1)) {
 
 free($res1);
 
-header('Content-Type: application/json');
-echo json_encode($response);
+closeConns();
+
+sendResponse(200,json_encode($response),'application/json');
+//header('Content-Type: application/json');
+//echo json_encode($response);
 
 ?>

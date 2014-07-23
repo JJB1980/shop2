@@ -25,6 +25,8 @@ app.config(['$routeProvider', function($routeProvider) {
 
 	when("/about/", {templateUrl: "partials/about.html", controller: "aboutController"}).
 	when("/contact/", {templateUrl: "partials/contact.html", controller: "contactController"}).
+	when("/login/", {templateUrl: "partials/login.html", controller: "loginController"}).
+	when("/logout/", {templateUrl: "partials/logout.html", controller: "loginController"}).
 
 	when("/stockItem/:id", {templateUrl: "partials/stockItem.html", controller: "stockItemController"}).
 	otherwise({redirectTo: '/'});

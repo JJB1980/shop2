@@ -3,10 +3,11 @@
 include_once "connect.php";
 include_once "sqlUtils.php";
 include_once "utils.php";
+include_once "restUtils.php";
 
-$query = $_REQUEST['q'];
-$page = $_REQUEST['page'];
-$searchType = $_REQUEST['searchType']; //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
+$query = xs('q');
+$page = xs('page');
+$searchType = xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
 
 $cli = $_SESSION['clientID'];
 $imgServ = sqlAVal("select ImageServer from ClientData where ID = ".$cli,"ImageServer");   
@@ -21,16 +22,16 @@ if ($searchType == 2) {
         where EComDisabled <> 'true' and Inactive <> 'true'  and
         ID in (select InventoryID from Specials where ExpiryDate > CURDATE()) limit 0,49";
 } else if ($searchType == 3) {
-    $sql = viewItems($_REQUEST['id']);
+    $sql = viewItems(xs('id'));
 } else if ($searchType == 4) {
     $sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
 		    from Inventory
 		    where EComDisabled <> 'true' and Inactive <> 'true'  and
-		    Category='".$_REQUEST['cat']."'";   
-    if ($_REQUEST['subcat1'] != "")
-	    $sql.=" and SubCategory1='".$_REQUEST['subcat1']."'";   
-    if ($_REQUEST['subcat2'] != "")
-	    $sql.=" and SubCategory2='".$_REQUEST['subcat2']."'";
+		    Category='".xs('cat')."'";   
+    if (xs('subcat1') != "")
+	    $sql.=" and SubCategory1='".xs('subcat1')."'";   
+    if (xs('subcat2') != "")
+	    $sql.=" and SubCategory2='".xs('subcat2')."'";
 } else {
     $sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
         from Inventory 
@@ -103,8 +104,11 @@ while ($r = row($res)) {
 
 free($res);
 
-header('Content-Type: application/json');
-echo json_encode($response);
+closeConns();
+
+sendResponse(200,json_encode($response),'application/json');
+//header('Content-Type: application/json');
+//echo json_encode($response);
 
 function getSearchValues($q) {
 	$vals=explode(" ",$q); $cnt=count($vals);

@@ -8,11 +8,12 @@ include_once "app/connect.php";
 include_once "app/sqlUtils.php";
 include_once "app/utils.php";
   
+closeConns();
 
 ?>
 
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if  IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> 
@@ -40,57 +41,61 @@ if (isset($_SESSION['ClientName']))
   
 </head>
 
-<body id="" data-ng-app="StoreApp">
+<body id="" data-ng-app="StoreApp" >
 
 <!--
 <div data-my-navigation-bar=""></div>
 -->
 
 <div data-ng-controller="menuController" id="myNavBar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-<div class="container">
-<div class="navbar-header">
-  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-    <span class="sr-only">Toggle navigation</span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-    <span class="icon-bar"></span>
-  </button>
-  <a class="navbar-brand" href="#">{{menuList.header}}</a>
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+			  <span class="sr-only">Toggle navigation</span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			  <span class="icon-bar"></span>
+			</button>
+		  <a class="navbar-brand" href="#">{{menuList.header}}</a>
+		</div>
+		<div class="collapse navbar-collapse">
+		  <ul id="myNavList" class="nav navbar-nav">
+		
+			<li data-ng-class="" data-ng-repeat="menuItem in menuList">
+				<a class="nav-link" href="#{{menuItem.link}}">
+				  {{menuItem.title}}</a>
+			</li>          
+		  
+		  </ul>
+		  
+		</div><!--/.nav-collapse -->
+	</div>
 </div>
-<div class="collapse navbar-collapse">
-  <ul id="myNavList" class="nav navbar-nav">
 
-	<li data-ng-class="" data-ng-repeat="menuItem in menuList">
-		<a class="nav-link" href="#{{menuItem.link}}">
-		  {{menuItem.title}}</a>
-	</li>          
-  
-  </ul>
-  
-</div><!--/.nav-collapse -->
-</div>
+<div id="categoriesShow" class="catContainer" >
+	<span class="show-cats toggleCats" tooltip-placement="bottom" tooltip="Show Categories">&gt;</span>
 </div>
 
-
-<div id="categories" data-ng-controller="categoriesController">
-	<accordion close-others="true">
+<div id="categories" class="catContainer" data-ng-controller="categoriesController">
+	<span class="close-cats toggleCats" tooltip-placement="bottom" tooltip="Hide Categories">&lt;</span>
+	<accordion class="navAccordion" close-others="true">
 		<accordion-group data-ng-repeat="cat0 in categoryList" heading="{{cat0.CategoryDescription}}" >
 			<ul class="noIco">
-			<li data-ng-repeat="cat1 in cat0.SubCat1">
-			<span class="dropdown" on-toggle="toggled(open)">
-			<span class="dropdown-toggle">
-			<a data-ng-click="thisThingClicked(cat0.CategoryCode,cat1.SubCategory1Code)" href="" >
-			  {{cat1.SubCategory1Description}}
-			</a>
-			</span>
-			<ul data-ng-show="cat1.CatCount > 0" class="dropdown-menu">
-			  <li data-ng-repeat="cat2 in cat1.SubCat2">
-			    <a href="#/categories/{{cat0.CategoryCode}}/{{cat1.SubCategory1Code}}/{{cat2.SubCategory2Code}}">
-				{{cat2.SubCategory2Description}}</a>
-			  </li>
-			</ul>
-		      </span>
-			</li>
+				<li data-ng-repeat="cat1 in cat0.SubCat1">
+					<span class="dropdown" on-toggle="toggled(open)">
+					<span class="dropdown-toggle">
+					<a data-ng-click="thisThingClicked(cat0.CategoryCode,cat1.SubCategory1Code)" href="" >
+					  {{cat1.SubCategory1Description}}
+					</a>
+					</span>
+					<ul data-ng-show="cat1.CatCount > 0" class="dropdown-menu">
+					  <li data-ng-repeat="cat2 in cat1.SubCat2">
+					    <a href="#/categories/{{cat0.CategoryCode}}/{{cat1.SubCategory1Code}}/{{cat2.SubCategory2Code}}">
+						{{cat2.SubCategory2Description}}</a>
+					  </li>
+					</ul>
+				      </span>
+				</li>
 			</ul>
 		</accordion-group>
 	</accordion>
@@ -119,6 +124,8 @@ if (isset($_SESSION['ClientName']))
 
 <script src="js/ui-bootstrap-tpls-0.11.0.min.js"></script>  
 
+<script src="bower_components/angular-ui/build/angular-ui.js"></script>
+
 -->
 
 <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -128,13 +135,15 @@ if (isset($_SESSION['ClientName']))
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 
+
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 
 <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
+<script src="bower_components/angularjs-modal-service/src/createDialog.js"></script>
 
       <!--
-      <script src="jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script> 
+<script src="jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.js"></script> 
 <script src="js/combobox.js"></script>	
 
 -->

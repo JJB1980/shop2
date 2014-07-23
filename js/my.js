@@ -3,7 +3,10 @@ $(document).ready(function(){
 	
 try {
 	logClient();
-
+	$(".catToggle").click(function () {
+		alert("here");
+		$("#categories").hide("slide",{ percent: 90 });
+	});
 } catch (err) {
 	//alert(err);
 }

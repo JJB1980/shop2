@@ -27,7 +27,7 @@ controller('searchController', function($scope, $routeParams, storeServices) {
     //$scope.searchType = 1;
  
     $scope.addToCart = function (id) {
-        alert(id);  
+        //alert(id);  
     };
  
     $scope.loadResults = function () {

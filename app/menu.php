@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+include_once "restUtils.php";
 
 $menu = array();
 
@@ -50,7 +51,8 @@ $item["link"] = "/cart/";
 array_push($menu,$item);
 
 
-header('Content-Type: application/json');
-echo json_encode($menu);
+sendResponse(200,json_encode($menu),'application/json');
+//header('Content-Type: application/json');
+//echo json_encode($menu);
 
 ?>

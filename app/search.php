@@ -5,16 +5,20 @@ include_once "sqlUtils.php";
 include_once "utils.php";
 include_once "restUtils.php";
 
-$query = xs('q');
-$page = xs('page');
-$searchType = xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
+use SqlUtils as sql;
+use RestUtils as rest;
+use Utils as ut;
+
+$query = ut\xs('q');
+$page = ut\xs('page');
+$searchType = ut\xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
 
 $cli = $_SESSION['clientID'];
-$imgServ = sqlAVal("select ImageServer from ClientData where ID = ".$cli,"ImageServer");   
-$imgFolder = sqlAVal("select ImageFolder from ClientData where ID = ".$cli,"ImageFolder");   
-$imgUrl = sqlAVal("select ServerURL from ImageServer where ID = ".$imgServ,"ServerURL");
-//$imgLoc = sqlAVal("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
-$imgLoc = getImageDir();
+$imgServ = sql\aval("select ImageServer from ClientData where ID = ".$cli,"ImageServer");   
+$imgFolder = sql\aval("select ImageFolder from ClientData where ID = ".$cli,"ImageFolder");   
+$imgUrl = sql\aval("select ServerURL from ImageServer where ID = ".$imgServ,"ServerURL");
+//$imgLoc = aval("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
+$imgLoc = ut\getImageDir();
 
 if ($searchType == 2) {
     $sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
@@ -22,16 +26,16 @@ if ($searchType == 2) {
         where EComDisabled <> 'true' and Inactive <> 'true'  and
         ID in (select InventoryID from Specials where ExpiryDate > CURDATE()) limit 0,49";
 } else if ($searchType == 3) {
-    $sql = viewItems(xs('id'));
+    $sql = viewItems(ut\xs('id'));
 } else if ($searchType == 4) {
     $sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
 		    from Inventory
 		    where EComDisabled <> 'true' and Inactive <> 'true'  and
-		    Category='".xs('cat')."'";   
-    if (xs('subcat1') != "")
-	    $sql.=" and SubCategory1='".xs('subcat1')."'";   
-    if (xs('subcat2') != "")
-	    $sql.=" and SubCategory2='".xs('subcat2')."'";
+		    Category='".ut\xs('cat')."'";   
+    if (ut\xs('subcat1') != "")
+	    $sql.=" and SubCategory1='".ut\xs('subcat1')."'";   
+    if (ut\xs('subcat2') != "")
+	    $sql.=" and SubCategory2='".ut\xs('subcat2')."'";
 } else {
     $sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
         from Inventory 
@@ -40,7 +44,7 @@ if ($searchType == 2) {
     $sql.=getSearchValues($query).") order by ID asc";
 }
 
-$res = dqry($sql);
+$res = sql\dqry($sql);
 
 $response = array();
 if ($searchType == 2) {
@@ -52,7 +56,7 @@ if ($searchType == 2) {
 } else {
     $response["Meta"] = "Search for '".$query."'";
 }
-$nrows = nrows($res);
+$nrows = sql\nrows($res);
 $response["ResultsCount"] = $nrows;
 $npages=floor($nrows/$page);
 if (($nrows % $page) > 0) {
@@ -65,7 +69,7 @@ $response["PageCount"] = $npages;
 $response["Results"] = array();
 $count = 0;
 
-while ($r = row($res)) {
+while ($r = sql\row($res)) {
 	$row = array();
 	$count++;
 	$row["Ord"] = $count;
@@ -77,9 +81,9 @@ while ($r = row($res)) {
 	$row["Code"] = $r["StoreCode"];	
 	
 	$isql = "select * from InventoryImage where InventoryID = ". $r["ID"]." order by ImageNo asc";
-	$imgRes = dqry($isql);
-	if (nrows($imgRes)) {	
-		$ir = row($imgRes);
+	$imgRes = sql\dqry($isql);
+	if (sql\nrows($imgRes)) {	
+		$ir = sql\row($imgRes);
 		$file = $imgLoc . $GLOBALS['DIR'] . $imgFolder . $GLOBALS['DIR'] . $ir['FileName'];	
 		if (file_exists($file)) {
 			list($width, $height, $type, $attr) = getimagesize($file); 
@@ -97,16 +101,16 @@ while ($r = row($res)) {
 			$row["imgHeight"] = "";
 			$row["imgWidth"] = "";
 	}
-	free($imgRes);
+	sql\free($imgRes);
 			
 	array_push($response["Results"],$row);
 }
 
-free($res);
+sql\free($res);
 
-closeConns();
+sql\closeConns();
 
-sendResponse(200,json_encode($response),'application/json');
+rest\sendResponse(200,json_encode($response),'application/json');
 //header('Content-Type: application/json');
 //echo json_encode($response);
 
@@ -132,10 +136,10 @@ function viewItems($id) {
 				order by LogDate desc
 				limit 0, 100";
 	//logx($sql);
-	$res = dqry($sql); 
+	$res = sql\dqry($sql); 
 
 	$x = ""; $cnt = 0; $test="";
-	while ($row = row($res)) {
+	while ($row = sql\row($res)) {
 		$dat = $row['InventoryItems'];
 		$arr = explode(",", $dat);
 		$n = count($arr);

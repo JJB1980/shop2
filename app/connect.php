@@ -8,6 +8,8 @@ session_start();
 
 include_once "sqlUtils.php";
 
+use SqlUtils as sql;
+
 $GLOBALS['DEBUG']=0;
 
 //$adminLoc="192.168.2.2";
@@ -67,7 +69,7 @@ if (mysqli_connect_errno()) {
 }
 
 if (!isset($_SESSION['ServerType'])) {
-	$_SESSION['ServerType'] = sqlAVal("select ServerType from AppServer where IPAddress='{$servName}' or ServerName='{$servName}' and Status='shop.live'","ServerType");
+	$_SESSION['ServerType'] = sql\aval("select ServerType from AppServer where IPAddress='{$servName}' or ServerName='{$servName}' and Status='shop.live'","ServerType");
 	//echo $_SESSION['ServerType'];
 }
 
@@ -77,8 +79,8 @@ if (isset($_REQUEST['client'])) {
 						from ClientData a, DataServer b, ImageServer c
 						where a.ID=".$_REQUEST['client']." and a.DataLocation=b.ID and a.ImageServer = c.ID";
 	//echo $sql;
-	$res = aqry($sql);
-	$row=row($res);
+	$res = sql\aqry($sql);
+	$row = sql\row($res);
 	$_SESSION['clientID']=$_REQUEST['client'];
 	if ($row) {
 		$_SESSION['ClientName']=$row['ClientName'];
@@ -107,7 +109,7 @@ if (mysqli_connect_errno()) {
 
 // set timezone
 if (isset($_SESSION['clientID'])) {
-	$tz = getCliPar("default.Timezone");
+	$tz = sql\getCliPar("default.Timezone");
 	if ($tz != "")
 		date_default_timezone_set($tz);
 	else
@@ -118,22 +120,10 @@ if (isset($_SESSION['clientID'])) {
 
 $GLOBALS['RestrictedTables'] = "'UsersA','UserProfile','AppServer','DataServer','ImageServer','FileServer','ClientData'";
 if (isset($_SESSION['clientID'])) {
-	if (getCliPar("module.Inventory") != "true")
+	if (sql\getCliPar("module.Inventory") != "true")
 		$GLOBALS['RestrictedTables'].=",'Inventory','Categories','Suppliers','Sizes','Manufacturers','SubCategories1','SubCategories2'";
-	if (getCliPar("module.CRM") != "true")
+	if (sql\getCliPar("module.CRM") != "true")
 		$GLOBALS['RestrictedTables'].=",'Clients','ClientStatus'";
-}
-
-function dbug($str) {
-	if ($GLOBALS['DEBUG'])
-		echo $str;
-}
-
-function closeConns() {
-	mysqli_close($GLOBALS['acon']); 
-	if ($GLOBALS['dcon'] != "") {
-		mysqli_close($GLOBALS['dcon']);
-	}
 }
 
 ?>

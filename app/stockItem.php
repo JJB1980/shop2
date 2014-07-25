@@ -6,43 +6,47 @@ include_once "sqlUtils.php";
 include_once "utils.php";
 include_once "restUtils.php";
 
-$id = xs('id');
+use SqlUtils as sql;
+use RestUtils as rest;
+use Utils as ut;
+
+$id = ut\xs('id');
 
 if ($id == "")
 	exit;	
 
 $sql = "select * from Inventory where ID = ".$id;
 
-$res = dqry($sql);
+$res = sql\dqry($sql);
 
 $cli = $_SESSION['clientID'];
-$imgServ = sqlAVal("select ImageServer from ClientData where ID = ".$cli,"ImageServer");   
-$imgFolder = sqlAVal("select ImageFolder from ClientData where ID = ".$cli,"ImageFolder");   
-$imgUrl = sqlAVal("select ServerURL from ImageServer where ID = ".$imgServ,"ServerURL");
-$imgLoc = getImageDir(); //sqlAVal("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
+$imgServ = sql\aval("select ImageServer from ClientData where ID = ".$cli,"ImageServer");   
+$imgFolder = sql\aval("select ImageFolder from ClientData where ID = ".$cli,"ImageFolder");   
+$imgUrl = sql\aval("select ServerURL from ImageServer where ID = ".$imgServ,"ServerURL");
+$imgLoc = ut\getImageDir(); //sqlAVal("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
 
 //$response["StockItem"] = array();
-$r = row($res);
-$post = array();
-$post["ID"] = $r["ID"];
-$post["Name"] = $r["Name"];
-$post["Description"] = $r["Description"];
-$post["Price"] = $r["Price"];
-$post["Available"] = $r["AvailableItems"];	
-$post["Code"] = $r["StoreCode"];	
-$mf = sqlVal("select ManufacturerName from Manufacturers where ManufacturerCode='".$r['Manufacturer']."'","ManufacturerName");
-$post["Manufacturer"] = $mf;
-$sz = sqlVal("select SizeName from Sizes where SizeCode='".$r['Size']."'","SizeName");	
-$post["Size"] = $sz;
-$post["Colour"] = $r["Colour"];
-$post["Weight"] = $r["Weight"];
+$r = sql\row($res);
+$response = array();
+$response["ID"] = $r["ID"];
+$response["Name"] = $r["Name"];
+$response["Description"] = $r["Description"];
+$response["Price"] = $r["Price"];
+$response["Available"] = $r["AvailableItems"];	
+$response["Code"] = $r["StoreCode"];	
+$mf = sql\dval("select ManufacturerName from Manufacturers where ManufacturerCode='".$r['Manufacturer']."'","ManufacturerName");
+$response["Manufacturer"] = $mf;
+$sz = sql\dval("select SizeName from Sizes where SizeCode='".$r['Size']."'","SizeName");	
+$response["Size"] = $sz;
+$response["Colour"] = $r["Colour"];
+$response["Weight"] = $r["Weight"];
 
-$post["Images"] = array();	
+$response["Images"] = array();	
 
 $isql = "select * from InventoryImage where InventoryID = ".$id." order by ImageNo asc";
-$ires = dqry($isql); $i=0;
+$ires = sql\dqry($isql); $i=0;
 
-while ($ir = row($ires)) {
+while ($ir = sql\row($ires)) {
 	$i++;
 	$file = $imgLoc . $GLOBALS['DIR'] . $imgFolder . $GLOBALS['DIR'] .  $ir['FileName'];
 	if (file_exists($file)) {
@@ -63,19 +67,19 @@ while ($ir = row($ires)) {
 		$image["imgHeight"] = $newHeight;
 		$image["imgWidth"] = $newWidth;
 
-		array_push($post["Images"],$image);				 
+		array_push($response["Images"],$image);				 
 	}
 }	
 
 
-//array_push($response["Stock"],$post);
+//array_push($response["Stock"],$response);
 
-free($res);
+sql\free($res);
 
-closeConns();
+sql\closeConns();
 
-sendResponse(200,json_encode($post),'application/json');
+rest\sendResponse(200,json_encode($response),'application/json');
 //header('Content-Type: application/json');
-//echo json_encode($post);
+//echo json_encode($response);
 
 ?>

@@ -1,5 +1,28 @@
 <?php
 
+namespace SqlUtils;
+
+
+function aInsID($str) {
+	return mysqli_insert_id($GLOBALS['acon']);
+}
+
+function dInsID($str) {
+	return mysqli_insert_id($GLOBALS['dcon']);
+}
+
+function dbug($str) {
+	if ($GLOBALS['DEBUG'])
+		echo $str;
+}
+
+function closeConns() {
+	mysqli_close($GLOBALS['acon']); 
+	if ($GLOBALS['dcon']) {
+		mysqli_close($GLOBALS['dcon']);
+	}
+}
+
 function nrows($result) {
 	if (!$result)
 		return 0;
@@ -77,12 +100,12 @@ function setAccPar($code,$value) {
 	} else {
 		$csql="update AccountSettings set SettingValue='".$value."' where SettingCode='".$code."'";   	
 	}
-	return runSQL($csql);
+	return dSQL($csql);
 }
 
 function getAccPar($code) {
 	$dfltRCSql="select ID,SettingValue from AccountSettings where SettingCode='".$code."'";
-	return sqlVal($dfltRCSql,"SettingValue");
+	return dval($dfltRCSql,"SettingValue");
 }
 
 function setCliPar($code,$value,$cli="") {
@@ -94,14 +117,14 @@ function setCliPar($code,$value,$cli="") {
 	} else {
 		$csql="update ClientSettings set SettingValue='".$value."' where ClientID=".$cli." and SettingCode='".$code."'";   	
 	}
-	return runASQL($csql);
+	return aSQL($csql);
 }
 
 function getCliPar($code,$cli="") {
 	if ($cli == "")
 		$cli = $_SESSION['clientID'];
 	$dfltRCSql="select ID,SettingValue from ClientSettings where ClientID=".$cli." and SettingCode='".$code."'";
-	return sqlAVal($dfltRCSql,"SettingValue");
+	return aval($dfltRCSql,"SettingValue");
 }
 
 function setUsrPar($code,$value) {
@@ -111,12 +134,12 @@ function setUsrPar($code,$value) {
 	} else {
 		$csql="update UserSettings set SettingValue='".$value."' where UserID=".$_SESSION['userID']." and SettingCode='".$code."'";   	
 	}
-	return runSQL($csql);
+	return dSQL($csql);
 }
 
 function getUsrPar($code) {
 	$dfltRCSql="select ID,SettingValue from UserSettings where UserID=".$_SESSION['userID']." and SettingCode='".$code."'";
-	return sqlVal($dfltRCSql,"SettingValue");
+	return dval($dfltRCSql,"SettingValue");
 }
 
 function userName($usr) {
@@ -201,7 +224,7 @@ function fiDate($inVal) {
 }
 
 // retrieve a specific value from client data.
-function sqlVal($sql,$fld) {
+function dval($sql,$fld) {
 	$result = dqry($sql);
 	if (!$result) {
 		trigger_error("Error SQL: ".$sql);
@@ -216,7 +239,7 @@ function sqlVal($sql,$fld) {
 }
 
 // retrieve a specific value from admin data.
-function sqlAVal($sql,$fld) {
+function aval($sql,$fld) {
 	$result = aqry($sql);
 	if (!$result) {
 		trigger_error("Error SQL: ".$sql);
@@ -239,7 +262,7 @@ function dqry($sql) {
 }
 
 // run sql ie  insert update
-function runASQL($sql) {
+function aSQL($sql) {
 	//$result = mysqli_query($GLOBALS['dcon'],$sql);
 	$ret=true;
 	if (!aqry($sql)) {
@@ -254,7 +277,7 @@ function runASQL($sql) {
 }
 
 // run sql ie  insert update
-function runSQL($sql) {
+function dSQL($sql) {
 	//$result = mysqli_query($GLOBALS['dcon'],$sql);
 	$ret=true;
 	if (!dqry($sql)) {

@@ -3,6 +3,8 @@
 session_start();
 include_once "restUtils.php";
 
+use RestUtils as rest;
+
 $menu = array();
 
 $menu["header"] = $_SESSION['ClientName'];
@@ -51,7 +53,7 @@ $item["link"] = "/cart/";
 array_push($menu,$item);
 
 
-sendResponse(200,json_encode($menu),'application/json');
+rest\sendResponse(200,json_encode($menu),'application/json');
 //header('Content-Type: application/json');
 //echo json_encode($menu);
 

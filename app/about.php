@@ -2,16 +2,18 @@
 
 include_once "connect.php";
 include_once "sqlUtils.php";
-include_once "utils.php";
 include_once "restUtils.php";
+
+use SqlUtils as sql;
+use RestUtils as rest;
 
 $post = array();
 
-$post["message"] = getAccPar("ECom.About");
+$post["message"] = sql\getAccPar("ECom.About");
 
-closeConns();
+sql\closeConns();
 
-sendResponse(200,json_encode($post),'application/json');
+rest\sendResponse(200,json_encode($post),'application/json');
 //header('Content-Type: application/json');
 //echo json_encode($post);
 

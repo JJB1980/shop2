@@ -1,5 +1,11 @@
 <?php
 
+namespace Utils;
+
+require_once "sqlUtils.php";
+use SqlUtils as sql;
+
+
 function xs($name) {
 	$temp = "";
 	if (isset($_GET[$name])) {
@@ -38,25 +44,25 @@ function moveULFile($from,$to,$share=0) {
 }
 
 function getImageDir() {
-	$imgServ = sqlAVal("select ImageServer from ClientData where ID = ".$_SESSION['clientID'],"ImageServer");   
-	//$servType = sqlAVal("select ServerType from ImageServer where ID = ".$imgServ,"ServerType");   
+	$imgServ = sql\aval("select ImageServer from ClientData where ID = ".$_SESSION['clientID'],"ImageServer");   
+	//$servType = aval("select ServerType from ImageServer where ID = ".$imgServ,"ServerType");   
    if ($_SESSION['ServerType'] == "linux") { //$servType == "linux")
-   	$imgLoc = sqlAVal("select LinuxShare from ImageServer where ID = ".$imgServ,"LinuxShare");
+   	$imgLoc = sql\aval("select LinuxShare from ImageServer where ID = ".$imgServ,"LinuxShare");
    } else {
-   	$imgLoc = sqlAVal("select WindowsShare from ImageServer where ID = ".$imgServ,"WindowsShare");
-   	//$imgLoc = sqlAVal("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
+   	$imgLoc = sql\aval("select WindowsShare from ImageServer where ID = ".$imgServ,"WindowsShare");
+   	//$imgLoc = aval("select ServerName from ImageServer where ID = ".$imgServ,"ServerName");
    	$imgLoc = str_replace("/","\\",$imgLoc);
    }
    return $imgLoc;
 }
 
 function getFileDir() {
-	$serv = sqlAVal("select FileServer from ClientData where ID = ".$_SESSION['clientID'],"FileServer");   
+	$serv = sql\aval("select FileServer from ClientData where ID = ".$_SESSION['clientID'],"FileServer");   
    if ($_SESSION["ServerType"] == "linux")
-   	$loc = sqlAVal("select LinuxShare from FileServer where ID = ".$serv,"LinuxShare");
+   	$loc = sql\aval("select LinuxShare from FileServer where ID = ".$serv,"LinuxShare");
    else {
-   	$loc = sqlAVal("select WindowsShare from FileServer where ID = ".$serv,"WindowsShare");
-		//$loc = sqlAVal("select ServerName from FileServer where ID = ".$serv,"ServerName");
+   	$loc = sql\aval("select WindowsShare from FileServer where ID = ".$serv,"WindowsShare");
+		//$loc = aval("select ServerName from FileServer where ID = ".$serv,"ServerName");
    	$loc = str_replace("/","\\",$loc);
    }
    return $loc;
@@ -65,9 +71,9 @@ function getFileDir() {
 function nerfFile($fid) {
 
 	$sql = "select * from UploadFile where ID = ".$fid;	
-	$results = aqry($sql);
+	$results = sql\aqry($sql);
 	$ok = 0;
-   while($row = row($results)) {	
+	while($row = sql\row($results)) {	
 		$file = $row['FileName'];
 		$fileType = $row['FileType'];
 		$fileFolder = $row['FileLocation'];
@@ -77,13 +83,13 @@ function nerfFile($fid) {
 			$dir=str_replace("/","\\",$fileFolder) . "\\";
 			if (unlink($dir.$file.".".$fileType)) {
 				$dsql = "update UploadFile set Status='deleted' where FileName='".$file."'";
-				runASql($dsql);
+				sql\runASql($dsql);
 				$ok=1;
 			}
 		}
 	}
 
-	free($results);
+	sql\free($results);
 	return $ok;
 }
 

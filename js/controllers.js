@@ -16,7 +16,7 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 	 		$scope.system.message = response.message;
 			     */
 			//alert(response.message);
-			if (response.status == "ok") {
+			if (response.status === "ok") {
 				$scope.loggedIn = true;
 				$rootScope.$broadcast('UPDATE_MENU');
 				$.cookie("customer-token-"+response.client, response.token, { expires: 100 });
@@ -33,7 +33,7 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 	 	storeServices.loginServ("","",0,1,"").success(function (response) {
 	 		//alert(response.message);
 			$scope.message = response.message;
-			if (response.status == "ok") {
+			if (response.status === "ok") {
 				$scope.loggedIn = false;
 				$rootScope.$broadcast('UPDATE_MENU');
 				$.cookie("customer-token-"+response.client, "");
@@ -48,12 +48,12 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 		}
 	 	storeServices.getClientID().success(function (response) {
 			token = $.cookie("customer-token-"+response.client);
-			if (token == "" || token == undefined) {
+			if (token === "" || token === undefined) {
 				return;
 			}
 			storeServices.loginServ("","",1,0,token).success(function (response) {
 				//alert(response.message);
-				if (response.status == "ok") {
+				if (response.status === "ok") {
 					$scope.loggedIn = true;
 					$rootScope.$broadcast('UPDATE_MENU');
 				}
@@ -194,7 +194,7 @@ controller('stockItemController', function($scope, $routeParams, storeServices) 
   
 	$scope.GetCarouselActive = function (index) {
 	
-		if (index == 0)
+		if (index === 0)
 			return "active";
 		else 
 			return "";

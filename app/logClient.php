@@ -1,27 +1,27 @@
 <?php
 
-include_once "connect.php";
-include_once "sqlUtils.php";
+include_once "dbConn.php";
 include_once "utils.php";
+session_start();
 
-use SqlUtils as sql;
 use Utils as ut;
+
+$conn = new DataDBConn();
 
 $action = "";
 
-$action = ut\xs['action'];
+$action = ut\xs('action');
 	
 if ($action == "doit") {
-	logClient();
+	logClient($conn);
 }
 
 if ($action == "logView") {
-	logView();
+	logView($conn);
 }
 
-sql\closeConns();
 
-function logView() {
+function logView(&$conn) {
 
 	if (isset($_REQUEST['ref']))
 		$ref = $_REQUEST['ref'];
@@ -29,7 +29,7 @@ function logView() {
 	if (isset($_REQUEST['id']))
 		$id = $_REQUEST['id'];	
 	
-	$ids = sql\dval("select InventoryItems from ShopClientLog where ID = ".$ref,"InventoryItems");
+	$ids = $conn->val("select InventoryItems from ShopClientLog where ID = ".$ref,"InventoryItems");
 	
 	if (strpos($ids,$id) !== false)	
 		return;
@@ -39,21 +39,21 @@ function logView() {
 	$ids.=$id.",";
 	
 	$sql = "update ShopClientLog set InventoryItems='".$ids."' where ID = ".$ref;	
-	sql\dSQL($sql);
+	$conn->query($sql);
 			
 }
 
-function logClient() {
+function logClient(&$conn) {
 
-	$ref = ut\xs['ref'];
+	$ref = ut\xs('ref');
 		
 	if ($ref == "") {
-		$sql = "insert into ShopClientLog (LogDate,IPAddress) values ('".sql\dateFI()."','".$_SERVER['REMOTE_ADDR']."')";	
-		sql\dSQL($sql);
-		$ref = sql\dInsID();
+		$sql = "insert into ShopClientLog (LogDate,IPAddress) values ('".ut\dateFI()."','".$_SERVER['REMOTE_ADDR']."')";	
+		$conn->query($sql);
+		$ref = $conn->insertID();
 	} else {
-		$sql = "update ShopClientLog set LogDate='".sql\dateFI()."', IPAddress='".$_SERVER['REMOTE_ADDR']."' where ID = ".$ref;	
-		sql\dSQL($sql);
+		$sql = "update ShopClientLog set LogDate='".ut\dateFI()."', IPAddress='".$_SERVER['REMOTE_ADDR']."' where ID = ".$ref;	
+		$conn->query($sql);
 	}
 		
 	echo $ref;

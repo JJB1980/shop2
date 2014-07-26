@@ -52,9 +52,6 @@ $item["title"] = "View Cart";
 $item["link"] = "/cart/";
 array_push($menu,$item);
 
-
-rest\sendResponse(200,json_encode($menu),'application/json');
-//header('Content-Type: application/json');
-//echo json_encode($menu);
+rest\sendJSON(200,$menu);
 
 ?>

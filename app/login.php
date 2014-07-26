@@ -1,33 +1,30 @@
 <?php
 
-include_once "connect.php";
-include_once "sqlUtils.php";
+include_once "dbConn.php";
 include_once "utils.php";
 include_once "restUtils.php";
+session_start();
 
-use SqlUtils as sql;
 use RestUtils as rest;
 use Utils as ut;
+
+$conn = new DataDBConn();
 
 $response = array();
 
 if (ut\xs('getClient') == 1) {
     $response['client'] = $_SESSION['clientID'];
 } else if (ut\xs('logout') == 1) {
-    doLogout($response);
+    doLogout($response,$conn);
 } else if (ut\xs('autoLogin') == 1) {
-    autoLogin($response);
+    autoLogin($response,$conn);
 } else {
-    doLogin($response);
+    doLogin($response,$conn);
 }
 
-sql\closeConns();
+rest\sendJSON(200,$response);
 
-rest\sendResponse(200,json_encode($response),'application/json');
-//header('Content-Type: application/json');
-//echo json_encode($response);
-
-function autoLogin(&$response) {
+function autoLogin(&$response,&$conn) {
 	$id = ut\xs("id");
 	$tok = ut\xs("tok");
 	if ($id == "" || $tok == "") {
@@ -36,7 +33,7 @@ function autoLogin(&$response) {
 		//echo "<error>";
 		return;
 	}		
-	$cliTok = sql\dSQL("select LoginToken from Clients where ID = ".$id,"LoginToken");
+	$cliTok = $conn->val("select LoginToken from Clients where ID = ".$id,"LoginToken");
 	if ($cliTok == $tok) {
 		$_SESSION['shopUser'] = $id;		
                 $response['status'] = "ok";
@@ -51,9 +48,9 @@ function autoLogin(&$response) {
 	}
 }
 
-function doLogin(&$response) {
+function doLogin(&$response,&$conn) {
 	$sql = "select Password from Clients where Email='".ut\xs('email')."'";
-	$pw = sql\dval($sql,"Password");
+	$pw = $conn->val($sql,"Password");
 	if ($pw === "") {
                 $response['status'] = "error";
                 $response['message'] = "Invalid Email.";
@@ -67,11 +64,11 @@ function doLogin(&$response) {
 		return;
 	}
 	$sql = "select ID from Clients where Email='".ut\xs('email')."'";
-	$id = sql\dval($sql,"ID");
+	$id = $conn->val($sql,"ID");
 	$_SESSION['shopUser'] = $id;
 	$token = rand(100000,999999); //$_REQUEST['tok'];
 	$sql = "update Clients set LoginToken = '".$token."' where ID = ".$id;
-	sql\dSQL($sql);
+	$conn->query($sql);
         $response['status'] = "ok";
         $response['message'] = "Success.";
         $response['ID'] = $id;
@@ -80,10 +77,11 @@ function doLogin(&$response) {
 	//echo "<ok>".$id;
 }
 
-function doLogout(&$response) {
+function doLogout(&$response,&$conn) {
 	$id = $_SESSION['shopUser'];
 	$_SESSION['shopUser'] = "";
 	$sql = "update Clients set LoginToken = '' where ID = ".$id;
+	$conn->query($sql);
         $response['status'] = "ok";
         $response['message'] = "Logged Out.";
         $response['client'] = $_SESSION['clientID'];

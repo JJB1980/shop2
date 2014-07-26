@@ -2,6 +2,19 @@
 
 namespace RestUtils;
 
+function sendJSON($status,$json) {
+    sendResponse($status,json_encode($json),'application/json');
+}
+
+// Helper method to send a HTTP response code/message
+function sendResponse($status = 200, $body = '', $content_type = 'text/html')
+{
+    $status_header = 'HTTP/1.1 ' . $status . ' ' . getStatusCodeMessage($status);
+    header($status_header);
+    header('Content-type: ' . $content_type);
+    echo $body;
+}
+
 // Helper method to get a string description for an HTTP status code
 // From http://www.gen-x-design.com/archives/create-a-rest-api-with-php/ 
 function getStatusCodeMessage($status)
@@ -56,12 +69,4 @@ function getStatusCodeMessage($status)
     return (isset($codes[$status])) ? $codes[$status] : '';
 }
  
-// Helper method to send a HTTP response code/message
-function sendResponse($status = 200, $body = '', $content_type = 'text/html')
-{
-    $status_header = 'HTTP/1.1 ' . $status . ' ' . getStatusCodeMessage($status);
-    header($status_header);
-    header('Content-type: ' . $content_type);
-    echo $body;
-}
 ?>

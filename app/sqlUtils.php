@@ -2,46 +2,6 @@
 
 namespace SqlUtils;
 
-
-function aInsID($str) {
-	return mysqli_insert_id($GLOBALS['acon']);
-}
-
-function dInsID($str) {
-	return mysqli_insert_id($GLOBALS['dcon']);
-}
-
-function dbug($str) {
-	if ($GLOBALS['DEBUG'])
-		echo $str;
-}
-
-function closeConns() {
-	mysqli_close($GLOBALS['acon']); 
-	if ($GLOBALS['dcon']) {
-		mysqli_close($GLOBALS['dcon']);
-	}
-}
-
-function nrows($result) {
-	if (!$result)
-		return 0;
-	return mysqli_num_rows($result);
-}
-
-function row($result) {
-	if (!$result)
-		return false;
-	return mysqli_fetch_array($result);
-}
-
-function free($result) {
-	if (!$result)
-		return;
-	return mysqli_free_result($result);
-}
-
-
 function logx($value,$del=1) {
 	//if ($del)		
 	//	runASQL("delete from XLog");
@@ -157,70 +117,12 @@ function userName($usr) {
 	return $un;
 }
 
-function cvtchars($instr) {
-	//$remove = array("\\", "|");
-	$outstr = str_replace("\\", "", $instr);
-	$outstr=str_replace("'","\'",$outstr);
-	$outstr=str_replace('"','\"',$outstr);
-	//$outstr=str_replace('\\','\\"',$outstr);
-	return $outstr;
-}
-
-function utf8_urldecode($str) {
-        return html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i", "&#x\\1;", urldecode($str)), null, 'UTF-8');
-}
-
 function auditLog($what,$table,$id,$upd) {
 	$user=$_SESSION['userID'];
 	$sql = "INSERT INTO AuditLog (AuditType,AuditValue,UserID,RecordID,TableName,AuditDate,AuditTime)";
 	$sql.=" VALUES (\"".$what."\",\"".$upd."\",".$user.",".$id.",\"".$table."\",'".dateFI()."','".timeFI()."')";
 	//echo $sql;	
 	$res=runSQL($sql);
-}
-
-function dateLong() {
-	return date("l, d F Y");
-	$today = getdate();
-	return $today['weekday'].", ".$today['mday']." ".$today['month']." ".$today['year'];
-}
-
-function timeFO() {
-	//date("l, d F Y");
-	return date('H:i:s');
-}
-
-function timeFI() {
-	//date("l, d F Y");
-	return date('H:i:s');
-}
-
-function dateFO() {
-	//date("l, d F Y");
-	//return date('H:i:s');
-	$today = getdate();
-	return $today['mday']."/".$today['mon']."/".$today['year'];
-}
-
-function dateFI() {
-	return date("Y-m-d");
-	$today = getdate();
-	return $today['year']."-".$today['mon']."-".$today['mday'];
-}
-
-// format output date
-function foDate($inVal) {
-	if ($inVal=="")
-		return "";
-	$o=explode("-",$inVal);
-	return $o[2]."/".$o[1]."/".$o[0];
-}
-
-// format input date
-function fiDate($inVal) {
-	if ($inVal=="")
-		return "";
-	$o=explode("/",$inVal);
-	return $o[2]."-".$o[1]."-".$o[0];
 }
 
 // retrieve a specific value from client data.
@@ -231,9 +133,9 @@ function dval($sql,$fld) {
 		return "";
 	}
 	$ret="";
-   while($row = row($result)) {
- 	 	$ret = $row[$fld];
-   }
+	while($row = row($result)) {
+		     $ret = $row[$fld];
+	}
 	free($result);
 	return $ret;
 }
@@ -251,14 +153,6 @@ function aval($sql,$fld) {
    }
 	free($result);
 	return $ret;
-}
-
-function aqry($sql) {
-	return mysqli_query($GLOBALS['acon'],$sql);
-}
-
-function dqry($sql) {
-	return mysqli_query($GLOBALS['dcon'],$sql);
 }
 
 // run sql ie  insert update
@@ -313,6 +207,65 @@ function aExists($sql) {
 	}
 	free($result);
 	return $ret;
+}
+
+
+function aInsID($str) {
+	return mysqli_insert_id($GLOBALS['acon']);
+}
+
+function dInsID($str) {
+	return mysqli_insert_id($GLOBALS['dcon']);
+}
+
+function dbug($str) {
+	if ($GLOBALS['DEBUG'])
+		echo $str;
+}
+
+function closeConns() {
+	mysqli_close($GLOBALS['acon']); 
+	if ($GLOBALS['dcon']) {
+		mysqli_close($GLOBALS['dcon']);
+	}
+}
+
+function nrows($result) {
+	if (!$result)
+		return 0;
+	return mysqli_num_rows($result);
+}
+
+function row($result) {
+	if (!$result)
+		return false;
+	return mysqli_fetch_array($result);
+}
+
+function free($result) {
+	if (!$result)
+		return false;
+	return mysqli_free_result($result);
+}
+
+function aqry($sql) {
+	return mysqli_query($GLOBALS['acon'],$sql);
+}
+
+function dqry($sql) {
+	return mysqli_query($GLOBALS['dcon'],$sql);
+}
+
+function connect($url,$user,$password,$dbase) {
+	return mysqli_connect($url,$user,$password,$dbase);
+}
+
+function connectErrNo() {
+	return mysqli_connect_errno();
+}
+
+function connectErr() {
+	return mysqli_connect_error();
 }
 
 ?>

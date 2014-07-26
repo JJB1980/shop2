@@ -5,6 +5,12 @@ namespace Utils;
 require_once "sqlUtils.php";
 use SqlUtils as sql;
 
+function badRequest() {
+    $post = array();
+    $post["status"] = 400;
+    $post["statusMessage"] = "Bad Request.";
+    rest\sendJSON(400,$post);   
+}
 
 function xs($name) {
 	$temp = "";
@@ -28,6 +34,56 @@ function nf($num) {
 	if ($num == 0)
 		return 0;
 	return number_format($num, 2);
+}
+
+function cvtchars($instr) {
+	//$remove = array("\\", "|");
+	$outstr = str_replace("\\", "", $instr);
+	$outstr=str_replace("'","\'",$outstr);
+	$outstr=str_replace('"','\"',$outstr);
+	//$outstr=str_replace('\\','\\"',$outstr);
+	return $outstr;
+}
+
+function utf8_urldecode($str) {
+        return html_entity_decode(preg_replace("/%u([0-9a-f]{3,4})/i", "&#x\\1;", urldecode($str)), null, 'UTF-8');
+}
+
+function dateLong() {
+	return date("l, d F Y");
+}
+
+function timeFO() {
+	return date('H:i:s');
+}
+
+function timeFI() {
+	return date('H:i:s');
+}
+
+function dateFO() {
+	$today = getdate();
+	return $today['mday']."/".$today['mon']."/".$today['year'];
+}
+
+function dateFI() {
+	return date("Y-m-d");
+}
+
+// format output date
+function foDate($inVal) {
+	if ($inVal=="")
+		return "";
+	$o=explode("-",$inVal);
+	return $o[2]."/".$o[1]."/".$o[0];
+}
+
+// format input date
+function fiDate($inVal) {
+	if ($inVal=="")
+		return "";
+	$o=explode("/",$inVal);
+	return $o[2]."-".$o[1]."-".$o[0];
 }
 
 function moveULFile($from,$to,$share=0) { 

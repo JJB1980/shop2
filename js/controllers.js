@@ -15,7 +15,6 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 			/*
 	 		$scope.system.message = response.message;
 			     */
-			//alert(response.message);
 			if (response.status === "ok") {
 				$scope.loggedIn = true;
 				$rootScope.$broadcast('UPDATE_MENU');
@@ -31,7 +30,6 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 
 	$scope.doLogout = function () {
 	 	storeServices.loginServ("","",0,1,"").success(function (response) {
-	 		//alert(response.message);
 			$scope.message = response.message;
 			if (response.status === "ok") {
 				$scope.loggedIn = false;
@@ -52,7 +50,6 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 				return;
 			}
 			storeServices.loginServ("","",1,0,token).success(function (response) {
-				//alert(response.message);
 				if (response.status === "ok") {
 					$scope.loggedIn = true;
 					$rootScope.$broadcast('UPDATE_MENU');
@@ -80,7 +77,6 @@ controller('categoriesController', function($scope, storeServices) {
 	};
 	
 	$scope.thisThingClicked = function (cat,subcat1) {
-		//alert(1);
 		//console.log("parse:"+cat+"|"+subcat1);
 		window.location = "#/categories/"+cat+"/"+subcat1;
 		//$(window).trigger("click");
@@ -94,7 +90,6 @@ controller('menuController', function($scope, storeServices) {
 
 	$scope.menuList = [];
 	//$scope.currentPage = $route.current.templateUrl;
-	//alert($route.current.templateUrl);
 	
 	$scope.loadMenu = function () {
 	 	storeServices.getMenu().success(function (response) {
@@ -103,7 +98,6 @@ controller('menuController', function($scope, storeServices) {
 	};
 
 	$scope.$on('UPDATE_MENU', function() {
-		//alert("update_menu");
 	      $scope.loadMenu();
 	});
 

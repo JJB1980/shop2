@@ -4,13 +4,13 @@ include_once "dbConn.php";
 include_once "utils.php";
 session_start();
 
-use Utils as ut;
+//use Utils as ut;
 
 $conn = new DataDBConn();
 
 $action = "";
 
-$action = ut\xs('action');
+$action = xs('action');
 	
 if ($action == "doit") {
 	logClient($conn);
@@ -45,7 +45,7 @@ function logView(&$conn) {
 
 function logClient(&$conn) {
 
-	$ref = ut\xs('ref');
+	$ref = xs('ref');
 		
 	if ($ref == "") {
 		$sql = "insert into ShopClientLog (LogDate,IPAddress) values ('".ut\dateFI()."','".$_SERVER['REMOTE_ADDR']."')";	

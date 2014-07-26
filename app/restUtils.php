@@ -1,9 +1,16 @@
 <?php
 
-namespace RestUtils;
+//namespace RestUtils;
 
 function sendJSON($status,$json) {
     sendResponse($status,json_encode($json),'application/json');
+}
+
+function badRequest() {
+    $post = array();
+    $post["status"] = 400;
+    $post["statusMessage"] = getStatusCodeMessage(400);
+    sendJSON(400,$post);   
 }
 
 // Helper method to send a HTTP response code/message

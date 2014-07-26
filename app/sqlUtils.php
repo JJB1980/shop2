@@ -1,6 +1,6 @@
 <?php
 
-namespace SqlUtils;
+//namespace SqlUtils;
 
 function logx($value,$del=1) {
 	//if ($del)		

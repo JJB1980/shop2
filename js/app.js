@@ -5,6 +5,7 @@
 var app = angular.module('StoreApp', [
   'StoreApp.controllers',
   'StoreApp.controllersSearch',
+  'StoreApp.controllersCart',
   'StoreApp.services',
   'StoreApp.directives',
   'ngRoute',

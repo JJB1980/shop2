@@ -9,7 +9,7 @@ session_start();
 include_once "sqlUtils.php";
 include_once "dbConn.php";
 
-use SqlUtils as sql;
+//use SqlUtils as sql;
 
 $GLOBALS['DEBUG']=0;
 
@@ -19,15 +19,15 @@ if (!isset($_SESSION['adminUser'])) {
 	//$adminLoc="localhost";
 	//$adminUser="root";
 	//$adminPassword="";
+	$adminUser="ADMINSQLUSR";
+	$adminPassword="rty654";
+	$adminData="adminData";
+	$adminLoc="localhost";
 	/*
 	$adminUser="jjbsw_root";
 	$adminPassword="fender71";
 	$adminData="jjbswcom_admin";
 	*/
-	$adminUser="ADMINSQLUSR";
-	$adminPassword="rty654";
-	$adminData="adminData";
-	$adminLoc="localhost";
 	
 	$_SESSION["adminUser"] = $adminUser;
 	$_SESSION["adminPassword"] = $adminPassword;
@@ -65,7 +65,7 @@ $GLOBALS['serverName']=$GLOBALS['baseUrl'].$_SERVER['SERVER_NAME'].$svrRoot;
 
 // connect to databases.
 //$GLOBALS['ADB'] = new dbConn($adminUser,$adminPassword,$adminLoc,$adminData);
-$GLOBALS['acon'] = sql\connect($_SESSION["adminLoc"],
+$GLOBALS['acon'] = connect($_SESSION["adminLoc"],
 			       $_SESSION["adminUser"],
 			       $_SESSION["adminPassword"],
 			       $_SESSION["adminData"]);
@@ -73,13 +73,13 @@ $GLOBALS['dcon'] = null;
 //$GLOBALS['DDB'] = null;
 
 	// Check connection
-if (sql\connectErrNo()) {
-  	$err = "Failed to connect to MySQL: " .sql\connectError();
+if (connectErrNo()) {
+  	$err = "Failed to connect to MySQL: " .connectError();
   	die("error");
 }
 
 if (!isset($_SESSION['ServerType'])) {
-	$_SESSION['ServerType'] = sql\aval("select ServerType from AppServer where IPAddress='{$servName}' or ServerName='{$servName}' and Status='shop.live'","ServerType");
+	$_SESSION['ServerType'] = aval("select ServerType from AppServer where IPAddress='{$servName}' or ServerName='{$servName}' and Status='shop.live'","ServerType");
 	//echo $_SESSION['ServerType'];
 }
 
@@ -89,8 +89,8 @@ if (!isset($_SESSION['clientID']) && isset($_REQUEST['client'])) {
 						from ClientData a, DataServer b, ImageServer c
 						where a.ID=".$_REQUEST['client']." and a.DataLocation=b.ID and a.ImageServer = c.ID";
 	//echo $sql;
-	$res = sql\aqry($sql);
-	$row = sql\row($res);
+	$res = aqry($sql);
+	$row = row($res);
 	$_SESSION['clientID']=$_REQUEST['client'];
 	if ($row) {
 		$_SESSION['ClientName']=$row['ClientName'];
@@ -105,7 +105,7 @@ if (!isset($_SESSION['clientID']) && isset($_REQUEST['client'])) {
 }
 
 if(isset($_SESSION['clientUser'])) {
-	$GLOBALS['dcon']=sql\connect($_SESSION['dataLocation'],
+	$GLOBALS['dcon']=connect($_SESSION['dataLocation'],
 				     $_SESSION['clientUser'],
 				     $_SESSION['clientPassword'],
 				     $_SESSION['dataName']);
@@ -116,14 +116,14 @@ if(isset($_SESSION['clientUser'])) {
 	exit;
 }
 	// Check connection
-if (sql\connectErrNo()) {
-  	$err = "Failed to connect to MySQL: " . sql\connectError();
+if (connectErrNo()) {
+  	$err = "Failed to connect to MySQL: " . connectError();
   	die("error");
 }
 
 // set timezone
 if (isset($_SESSION['clientID'])) {
-	$tz = sql\getCliPar("default.Timezone");
+	$tz = getCliPar("default.Timezone");
 	if ($tz != "") {
 		date_default_timezone_set($tz);
 		
@@ -136,9 +136,9 @@ if (isset($_SESSION['clientID'])) {
 
 $GLOBALS['RestrictedTables'] = "'UsersA','UserProfile','AppServer','DataServer','ImageServer','FileServer','ClientData'";
 if (isset($_SESSION['clientID'])) {
-	if (sql\getCliPar("module.Inventory") != "true")
+	if (getCliPar("module.Inventory") != "true")
 		$GLOBALS['RestrictedTables'].=",'Inventory','Categories','Suppliers','Sizes','Manufacturers','SubCategories1','SubCategories2'";
-	if (sql\getCliPar("module.CRM") != "true")
+	if (getCliPar("module.CRM") != "true")
 		$GLOBALS['RestrictedTables'].=",'Clients','ClientStatus'";
 }
 

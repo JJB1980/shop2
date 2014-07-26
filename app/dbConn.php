@@ -65,7 +65,7 @@ class DBConn {
     }
 
     public function row() {
-        return $this::rowGet($this->resultSet);
+        return DBConn::rowGet($this->resultSet);
     }
 
     public static function rowGet($resultSet) {
@@ -75,7 +75,7 @@ class DBConn {
     }
  
     public function rowCount() {
-        return $this::rowCountGet($this->resultSet);
+        return DBConn::rowCountGet($this->resultSet);
     }
     
     public static function rowCountGet($resultSet) {
@@ -89,7 +89,7 @@ class DBConn {
     }
     
     public function free() {
-        return $this::freeRS($this->resultSet);
+        return DBConn::freeRS($this->resultSet);
     }
     
     public static function freeRS($rs) {
@@ -103,10 +103,10 @@ class DBConn {
 		return "";
 	}
 	$ret="";
-        while($row = $this::rowGet($rs)) {
+        while($row = DBConn::rowGet($rs)) {
                      $ret = $row[$fld];
         }
-	$this::freeRS($rs);
+	DBConn::freeRS($rs);
 	return $ret;
     }
  

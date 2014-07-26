@@ -3,7 +3,7 @@
 session_start();
 include_once "restUtils.php";
 
-use RestUtils as rest;
+//use RestUtils as rest;
 
 $menu = array();
 
@@ -52,6 +52,6 @@ $item["title"] = "View Cart";
 $item["link"] = "/cart/";
 array_push($menu,$item);
 
-rest\sendJSON(200,$menu);
+sendJSON(200,$menu);
 
 ?>

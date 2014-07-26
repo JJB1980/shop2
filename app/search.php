@@ -5,19 +5,20 @@ include_once "utils.php";
 include_once "restUtils.php";
 session_start();
 
-use RestUtils as rest;
-use Utils as ut;
+//use RestUtils as rest;
+//use Utils as ut;
 
 $aconn = new AdminDBConn();
-$dconn = new DataDBConn();
+$conn = new DataDBConn();
 
-$query = ut\xs('q');
-$page = ut\xs('page');
-$searchType = ut\xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
+$query = xs('q');
+$page = xs('page');
+$searchType = xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
 
-$vals = [ 1 => "a" , 2 => "b" , 3 => "c" , 4 => "d" ];
-if (!array_key_exists($searchType,$vals)) {
-    ut\badRequest();
+//$vals = [ 1 => "a" , 2 => "b" , 3 => "c" , 4 => "d" ];
+//if (!array_key_exists($searchType,$vals)) {
+if ($searchType <= 0 || $searchType > 4) { 
+    badRequest();
     exit;
 }
 
@@ -40,18 +41,18 @@ switch ($searchType) {
 	break;
     case 3:
 	$response["Meta"] = "Also Viewed";
-	$sql = viewItems(ut\xs('id'),$dconn);
+	$sql = viewItems(xs('id'),$conn);
 	break;
     case 4:
 	$response["Meta"] = "Category Search";
 	$sql = "select StoreCode,ID,Name,Description,Price,Manufacturer,ExcludeGST,AvailableItems
 			from Inventory
 			where EComDisabled <> 'true' and Inactive <> 'true'  and
-			Category='".ut\xs('cat')."'";   
-	if (ut\xs('subcat1') != "")
-		$sql.=" and SubCategory1='".ut\xs('subcat1')."'";   
-	if (ut\xs('subcat2') != "")
-		$sql.=" and SubCategory2='".ut\xs('subcat2')."'";
+			Category='".xs('cat')."'";   
+	if (xs('subcat1') != "")
+		$sql.=" and SubCategory1='".xs('subcat1')."'";   
+	if (xs('subcat2') != "")
+		$sql.=" and SubCategory2='".xs('subcat2')."'";
 	break;
     default:
 	$response["Meta"] = "Search for '".$query."'";
@@ -62,9 +63,9 @@ switch ($searchType) {
 	$sql.=getSearchValues($query).") order by ID asc";
 }
 
-$res = $dconn->query($sql);
+$conn->query($sql);
 
-$nrows = $dconn->rowCount($res);
+$nrows = $conn->rowCount();
 $response["ResultsCount"] = $nrows;
 if ($page === "" || $page === 0)
     $page = 5;
@@ -79,7 +80,7 @@ $response["PageCount"] = $npages;
 $response["Results"] = array();
 $count = 0;
 
-while ($r = $dconn->row($res)) {
+while ($r = $conn->row()) {
 	$row = array();
 	$count++;
 	$row["Ord"] = $count;
@@ -91,9 +92,9 @@ while ($r = $dconn->row($res)) {
 	$row["Code"] = $r["StoreCode"];	
 	
 	$isql = "select * from InventoryImage where InventoryID = ". $r["ID"]." order by ImageNo asc";
-	$imgRes = $dconn->queryGet($isql);
-	if ($dconn::rowCountGet($imgRes)) {	
-		$ir = $dconn::rowGet($imgRes);
+	$imgRes = $conn->queryGet($isql);
+	if (DBConn::rowCountGet($imgRes)) {	
+		$ir = DBConn::rowGet($imgRes);
 		$file = $imgLoc . $_SESSION['DIR'] . $imgFolder . $_SESSION['DIR'] . $ir['FileName'];	
 		if (file_exists($file)) {
 			list($width, $height, $type, $attr) = getimagesize($file); 
@@ -111,14 +112,14 @@ while ($r = $dconn->row($res)) {
 			$row["imgHeight"] = "";
 			$row["imgWidth"] = "";
 	}
-	$dconn::freeRS($imgRes);
+	DBConn::freeRS($imgRes);
 			
 	array_push($response["Results"],$row);
 }
 
-$dconn->free($res);
+$conn->free();
 
-rest\sendJSON(200,$response);
+sendJSON(200,$response);
 
 // return individual search values from query string.
 function getSearchValues($q) {
@@ -166,7 +167,7 @@ function viewItems($id,&$conn) {
 	$conn->free();
 	
 	//logx($test);
-	if ($cnt == 0)
+	if ($cnt === 0)
 		return "";
 
 	$keys = array_keys($countByID);

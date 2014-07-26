@@ -1,15 +1,15 @@
 <?php
 
-if (!isset($_REQUEST['client']))
+if (!isset($_REQUEST['client'])) {
   $_REQUEST['client'] = 1;
-  
+}
 
 include_once "app/connect.php";
 include_once "app/sqlUtils.php";
 
-use SqlUtils as sql;
+//use SqlUtils as sql;
 
-sql\closeConns();
+closeConns();
 
 ?>
 
@@ -156,6 +156,7 @@ if (isset($_SESSION['ClientName']))
 <script src="js/services.js"></script>
 <script src="js/controllers.js"></script>
 <script src="js/controllersSearch.js"></script>
+<script src="js/controllersCart.js"></script>
 <script src="js/filters.js"></script>
 <script src="js/directives.js"></script>
 

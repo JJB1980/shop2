@@ -5,28 +5,28 @@ include_once "utils.php";
 include_once "restUtils.php";
 session_start();
 
-use RestUtils as rest;
-use Utils as ut;
+//use RestUtils as rest;
+//use Utils as ut;
 
 $conn = new DataDBConn();
 
 $response = array();
 
-if (ut\xs('getClient') == 1) {
+if (xs('getClient') == 1) {
     $response['client'] = $_SESSION['clientID'];
-} else if (ut\xs('logout') == 1) {
+} else if (xs('logout') == 1) {
     doLogout($response,$conn);
-} else if (ut\xs('autoLogin') == 1) {
+} else if (xs('autoLogin') == 1) {
     autoLogin($response,$conn);
 } else {
     doLogin($response,$conn);
 }
 
-rest\sendJSON(200,$response);
+sendJSON(200,$response);
 
 function autoLogin(&$response,&$conn) {
-	$id = ut\xs("id");
-	$tok = ut\xs("tok");
+	$id = xs("id");
+	$tok = xs("tok");
 	if ($id == "" || $tok == "") {
                 $response['status'] = "error";
                 $response['message'] = "No ID or Token.";
@@ -49,7 +49,7 @@ function autoLogin(&$response,&$conn) {
 }
 
 function doLogin(&$response,&$conn) {
-	$sql = "select Password from Clients where Email='".ut\xs('email')."'";
+	$sql = "select Password from Clients where Email='".xs('email')."'";
 	$pw = $conn->val($sql,"Password");
 	if ($pw === "") {
                 $response['status'] = "error";
@@ -57,13 +57,13 @@ function doLogin(&$response,&$conn) {
 		//echo "<error>Invalid Email.";
 		return;
 	}
-	if ($pw !== ut\xs('password')) {
+	if ($pw !== xs('password')) {
                 $response['status'] = "error";
                 $response['message'] = "Invalid Password.";
 		// "<error>Invalid Password";
 		return;
 	}
-	$sql = "select ID from Clients where Email='".ut\xs('email')."'";
+	$sql = "select ID from Clients where Email='".xs('email')."'";
 	$id = $conn->val($sql,"ID");
 	$_SESSION['shopUser'] = $id;
 	$token = rand(100000,999999); //$_REQUEST['tok'];

@@ -8,7 +8,7 @@ include_once "restUtils.php";
 session_start();
 
 //use SqlUtils as sql;
-use RestUtils as rest;
+//use RestUtils as rest;
 //use Utils as ut;
 
 $actMnu=0;
@@ -24,7 +24,7 @@ if (!$res1)
 $response = array();
 	
 
-while ($r1 = $conn::rowGet($res1)) {
+while ($r1 = DBConn::rowGet($res1)) {
         $cat1 = array();
         $cat1['CategoryCode'] = $r1['CategoryCode'];
         $cat1['CategoryDescription'] = $r1['CategoryDescription'];
@@ -33,7 +33,7 @@ while ($r1 = $conn::rowGet($res1)) {
        	//$res2 = sql\dqry($sql);
 	$res2 = $conn->queryGet($sql);
         $count1 = 0;
-	while ($r2 = $conn::rowGet($res2)) {
+	while ($r2 = DBConn::rowGet($res2)) {
             $cat2 = array();
             $cat2['SubCategory1Code'] = $r2['SubCategory1Code'];
             $cat2['SubCategory1Description'] = $r2['SubCategory1Description'];
@@ -42,7 +42,7 @@ while ($r1 = $conn::rowGet($res1)) {
 	    $res3 = $conn->queryGet($sql);
             $cat2['SubCat2'] = array();
             $count2 = 0;
-            while ($r3 = $conn::rowGet($res3)) {
+            while ($r3 = DBConn::rowGet($res3)) {
                $cat3 = array();
                $cat3['SubCategory2Code'] = $r3['SubCategory2Code'];
                $cat3['SubCategory2Description'] = $r3['SubCategory2Description'];
@@ -52,15 +52,15 @@ while ($r1 = $conn::rowGet($res1)) {
             $cat2['CatCount'] = $count2;
             array_push($cat1['SubCat1'],$cat2);
             $count1++;
-            $conn::freeRS($res3);	
+            DBConn::freeRS($res3);	
 	}
         $cat1['CatCount'] = $count1;
         array_push($response,$cat1);
-	$conn::freeRS($res2);
+	DBConn::freeRS($res2);
 }
 
-$conn::freeRS($res1);
+DBConn::freeRS($res1);
 
-rest\sendJSON(200,$response);
+sendJSON(200,$response);
 
 ?>

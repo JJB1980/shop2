@@ -6,13 +6,13 @@ include_once "utils.php";
 include_once "restUtils.php";
 session_start();
 
-use RestUtils as rest;
-use Utils as ut;
+//use RestUtils as rest;
+//use Utils as ut;
 
-$id = ut\xs('id');
+$id = xs('id');
 
 if ($id == "") {
-	ut\badRequest();
+	badRequest();
 	exit;	
 }
 
@@ -50,7 +50,7 @@ $response["Images"] = array();
 $isql = "select * from InventoryImage where InventoryID = ".$id." order by ImageNo asc";
 $ires = $conn->queryGet($isql); $i=0;
 
-while ($ir = $conn::rowGet($ires)) {
+while ($ir = DBConn::rowGet($ires)) {
 	$i++;
 	$file = $imgLoc . $_SESSION['DIR'] . $imgFolder . $_SESSION['DIR'] .  $ir['FileName'];
 	if (file_exists($file)) {
@@ -78,9 +78,9 @@ while ($ir = $conn::rowGet($ires)) {
 
 //array_push($response["Stock"],$response);
 
-$conn::freeRS($ires);
+DBConn::freeRS($ires);
 $conn->free();
 
-rest\sendJSON(200,$response);
+sendJSON(200,$response);
 
 ?>

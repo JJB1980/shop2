@@ -45,12 +45,14 @@ $response["Size"] = $sz;
 $response["Colour"] = $r["Colour"];
 $response["Weight"] = $r["Weight"];
 
+$conn->free();
+
 $response["Images"] = array();	
 
 $isql = "select * from InventoryImage where InventoryID = ".$id." order by ImageNo asc";
-$ires = $conn->queryGet($isql); $i=0;
+$conn->query($isql); $i=0;
 
-while ($ir = DBConn::rowGet($ires)) {
+while ($ir = $conn->row()) {
 	$i++;
 	$file = $imgLoc . $_SESSION['DIR'] . $imgFolder . $_SESSION['DIR'] .  $ir['FileName'];
 	if (file_exists($file)) {
@@ -67,7 +69,7 @@ while ($ir = DBConn::rowGet($ires)) {
 					
 		$img = $imgUrl . "/" . $imgFolder . "/" . $ir['FileName'];		
 		
-		$image["imgSrc"] = $img ."?" .rand(1000,10000000);
+		$image["imgSrc"] = $img; // ."?" .rand(1000,10000000);
 		$image["imgHeight"] = $newHeight;
 		$image["imgWidth"] = $newWidth;
 
@@ -78,7 +80,6 @@ while ($ir = DBConn::rowGet($ires)) {
 
 //array_push($response["Stock"],$response);
 
-DBConn::freeRS($ires);
 $conn->free();
 
 sendJSON(200,$response);

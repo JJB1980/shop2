@@ -13,7 +13,7 @@ $conn = new DataDBConn();
 
 $query = xs('q');
 $page = xs('page');
-$searchType = xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
+$searchType = (int)xs('searchType'); //  1 = search with query, 2 = specials, 3 = also viewed, 4 = Categories
 
 //$vals = [ 1 => "a" , 2 => "b" , 3 => "c" , 4 => "d" ];
 //if (!array_key_exists($searchType,$vals)) {
@@ -103,7 +103,7 @@ while ($r = $conn->row()) {
 			$newHeight = $newWidth / $aspect;		
 			$img = $imgUrl . "/" . $imgFolder . "/" . $ir['FileName'];			
 			//echo "<img width='".$newWidth."' height='".$newHeight."' src='".$img."?".rand(1000,10000000)."'></img>";
-			$row["imgSrc"] = $img ."?" .rand(1000,10000000);
+			$row["imgSrc"] = $img; // ."?" .rand(1000,10000000);
 			$row["imgHeight"] = $newHeight;
 			$row["imgWidth"] = $newWidth;
 		}	

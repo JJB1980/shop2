@@ -17,6 +17,8 @@ class DBConn {
             return;
         $this->setConnection($args[0],$args[1],$args[2],$args[3]);
         //$this->setConnection($user,$password,$url,$database);
+        if (isset($_SESSION["timezone"]))
+            date_default_timezone_set($_SESSION["timezone"]);
         $this->connect();
     }
 
@@ -36,7 +38,8 @@ class DBConn {
         if (!mysqli_connect_errno()) {
             return true;
         } else {
-            throw mysqli_connect_error();
+            //throw mysqli_connect_error();
+            $this->connection = false;
             return false;
         }
     }
@@ -47,7 +50,7 @@ class DBConn {
                 return (mysqli_close($this->connection) ? true : false);
             return true;
         } catch (Exception $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
         }
     }
     
@@ -65,7 +68,7 @@ class DBConn {
     }
 
     public function row() {
-        return DBConn::rowGet($this->resultSet);
+        return self::rowGet($this->resultSet);
     }
 
     public static function rowGet($resultSet) {
@@ -75,7 +78,7 @@ class DBConn {
     }
  
     public function rowCount() {
-        return DBConn::rowCountGet($this->resultSet);
+        return self::rowCountGet($this->resultSet);
     }
     
     public static function rowCountGet($resultSet) {
@@ -89,7 +92,7 @@ class DBConn {
     }
     
     public function free() {
-        return DBConn::freeRS($this->resultSet);
+        return self::freeRS($this->resultSet);
     }
     
     public static function freeRS($rs) {
@@ -99,26 +102,27 @@ class DBConn {
     public function val($sql,$fld) {
 	$rs = $this->queryGet($sql);
 	if (!$rs) {
-		trigger_error("Error SQL: ".$sql);
-		return "";
+                return "";
+		//trigger_error("Error SQL: ".$sql);
+		//return "";
 	}
 	$ret="";
-        while($row = DBConn::rowGet($rs)) {
+        while($row = self::rowGet($rs)) {
                      $ret = $row[$fld];
         }
-	DBConn::freeRS($rs);
+	self::freeRS($rs);
 	return $ret;
     }
  
     public function exists($sql) {
-           $this->query($sql);
-           if (!$this->resultSet)
+           $rs = $this->queryGet($sql);
+           if (!$rs)
                    return false;
            $exists=false;
-           if ($this->rowCount() > 0) {
+           if (self::rowCountGet($rs) > 0) {
                    $exists = true;
            }
-           $this->free();
+           self::freeRS($rs);
            return $exists;
    }
 
@@ -128,10 +132,12 @@ class DBConn {
 class DataDBConn extends DBConn {
 
     function __construct() {
+        
         parent::__construct($_SESSION['clientUser'],
                             $_SESSION['clientPassword'],
                             $_SESSION['dataLocation'],
                             $_SESSION['dataName']);
+        
     }
   
     public function setAccPar($code,$value) {
@@ -170,10 +176,12 @@ class DataDBConn extends DBConn {
 class AdminDBConn extends DBConn {
     
     function __construct() {
+        
         parent::__construct($_SESSION["adminUser"],
                             $_SESSION["adminPassword"],
                             $_SESSION["adminLoc"],
                             $_SESSION["adminData"]);
+        
     }
     
     public function setCliPar($code,$value,$cli="") {

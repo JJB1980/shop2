@@ -5,11 +5,6 @@ if (!isset($_REQUEST['client'])) {
 }
 
 include_once "app/connect.php";
-include_once "app/sqlUtils.php";
-
-//use SqlUtils as sql;
-
-closeConns();
 
 ?>
 

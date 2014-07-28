@@ -48,11 +48,11 @@ function logClient(&$conn) {
 	$ref = xs('ref');
 		
 	if ($ref == "") {
-		$sql = "insert into ShopClientLog (LogDate,IPAddress) values ('".ut\dateFI()."','".$_SERVER['REMOTE_ADDR']."')";	
+		$sql = "insert into ShopClientLog (LogDate,IPAddress) values ('".dateFI()."','".$_SERVER['REMOTE_ADDR']."')";	
 		$conn->query($sql);
 		$ref = $conn->insertID();
 	} else {
-		$sql = "update ShopClientLog set LogDate='".ut\dateFI()."', IPAddress='".$_SERVER['REMOTE_ADDR']."' where ID = ".$ref;	
+		$sql = "update ShopClientLog set LogDate='".dateFI()."', IPAddress='".$_SERVER['REMOTE_ADDR']."' where ID = ".$ref;	
 		$conn->query($sql);
 	}
 		

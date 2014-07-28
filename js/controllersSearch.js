@@ -3,7 +3,7 @@
 /* Controllers */
 angular.module('StoreApp.controllersSearch', ['ui.bootstrap']).
 
-controller('searchController', function($scope, $routeParams, storeServices) {
+controller('searchController', function($scope, $stateParams, storeServices) {
 
     $scope.searchResults = null;
     $scope.currentPage = 1;
@@ -15,10 +15,10 @@ controller('searchController', function($scope, $routeParams, storeServices) {
     $scope.pageView = null;
     $scope.searchText = $.cookie("searchText");
     
-    $scope.id = $routeParams.id;
-    $scope.cat = $routeParams.cat;
-    $scope.subcat1 = $routeParams.subcat1;
-    $scope.subcat2 = $routeParams.subcat2;
+    $scope.id = $stateParams.id;
+    $scope.cat = $stateParams.cat;
+    $scope.subcat1 = $stateParams.subcat1;
+    $scope.subcat2 = $stateParams.subcat2;
     if ($scope.subcat2 === undefined)
         $scope.subcat2 = "";
      if ($scope.subcat1 === undefined)

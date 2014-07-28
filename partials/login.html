@@ -1,12 +1,12 @@
 
     <div id="loginForm">
       <form name="login_form" class="ng-invalid ng-invalid-required ng-dirty ng-valid-minlength ng-valid-email"
-            data-ng-submit="doLogin()" >
+            data-ng-submit="doLogin(loginForm)" >
         <h3 class="form-signin-heading">Please sign in</h3>
-        <input data-ng-model="email" type="email" class="form-control do-login"
+        <input data-ng-model="loginForm.email" type="email" class="form-control do-login"
                placeholder="Email address" required autofocus/>
     
-        <input data-ng-model="password" type="password"
+        <input data-ng-model="loginForm.password" type="password"
                class="form-control do-login" placeholder="Password" required/>
         <!--
         <div class="checkbox">

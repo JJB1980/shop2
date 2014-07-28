@@ -3,40 +3,24 @@
 /* Controllers */
 angular.module('StoreApp.controllers', ['ui.bootstrap']).
 
-controller('loginController', function($scope, $rootScope, storeServices) {
+controller('loginController', function($scope, $rootScope, $location, storeServices) {
 
 	//$scope.categoryList = [];
 	$scope.loggedIn = false;
 	$scope.client = "";
 	
-	$scope.doLogin = function () {
-		console.log($scope.email+"|"+$scope.password);
-	 	storeServices.loginServ($scope.email,$scope.password,0,0,"").success(function (response) {
-			/*
-	 		$scope.system.message = response.message;
-			     */
-			if (response.status === "ok") {
-				$scope.loggedIn = true;
-				$rootScope.$broadcast('UPDATE_MENU');
-				$.cookie("customer-token-"+response.client, response.token, { expires: 100 });
-				$.cookie("customer-id-"+response.client, response.ID, { expires: 100 });
-				$rootScope.clientID = response.client;
-				window.location = "#/home";
-			} else {
-				alert(response.message);
-			}
+	$scope.doLogin = function (loginForm) {
+		console.log(loginForm.email+"|"+loginForm.password);
+	 	storeServices.loginServ(loginForm.email,loginForm.password,0,0,"").success(function (response) {
+			$scope.loggedIn = storeServices.doLogin(response);
+			console.log("loggedIn: "+$scope.loggedIn);
 	 	});
 	};
 
 	$scope.doLogout = function () {
 	 	storeServices.loginServ("","",0,1,"").success(function (response) {
 			$scope.message = response.message;
-			if (response.status === "ok") {
-				$scope.loggedIn = false;
-				$rootScope.$broadcast('UPDATE_MENU');
-				$.cookie("customer-token-"+response.client, "");
-				$.cookie("customer-id-"+response.client, "");
-			}
+			$scope.loggedIn = ! storeServices.doLogout(response);
 	 	});
 	};
 
@@ -66,7 +50,7 @@ controller('loginController', function($scope, $rootScope, storeServices) {
 	
 }).
 
-controller('categoriesController', function($scope, storeServices) {
+controller('categoriesController', function($scope, $location, storeServices) {
 
 	$scope.categoryList = [];
 	
@@ -78,12 +62,19 @@ controller('categoriesController', function($scope, storeServices) {
 	
 	$scope.thisThingClicked = function (cat,subcat1) {
 		//console.log("parse:"+cat+"|"+subcat1);
-		window.location = "#/categories/"+cat+"/"+subcat1;
+		$location.path("/categories/"+cat+"/"+subcat1);
 		//$(window).trigger("click");
 	};
 	
 	$scope.loadCategories();
 
+}).
+
+controller('accountController', function($scope, storeServices) {
+
+	$scope.account = null;
+	//$scope.currentPage = $route.current.templateUrl;
+	
 }).
 
 controller('menuController', function($scope, storeServices) {
@@ -164,8 +155,8 @@ controller('contactController', function($scope, $sce, storeServices) {
 
 }).
  
-controller('stockItemController', function($scope, $routeParams, storeServices) {
-	$scope.id = $routeParams.id;
+controller('stockItemController', function($scope, $stateParams, storeServices) {
+	$scope.id = $stateParams.id;
 	$scope.stockItem = null;
 	$scope.myInterval = 3000;
 	$scope.stockItem = null;
@@ -174,12 +165,13 @@ controller('stockItemController', function($scope, $routeParams, storeServices) 
 		$scope.stockItem = response;
 	
 		// log the id for also viewed search.
-		var ref = $.cookie("client-id");
-		if (isNaN(ref))
-			ref = "";
-		var url = "app/logClient.php?action=doit&ref="+ref;
-		storeServices.serverGet(url).success(function (response) {
-			ref = response;
+		var refer = $.cookie("client-id");
+		if (isNaN(refer))
+			refer = "";
+		var url = "app/logClient.php"; //?action=doit&ref="+refer;
+		var params = { action: "doit", ref: refer };
+		storeServices.serverGet(url,params).success(function (response) {
+			var ref = response;
 			$.cookie("client-id", ref, { expires: 1 });
 		});
 		

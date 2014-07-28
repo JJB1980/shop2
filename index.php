@@ -98,7 +98,7 @@ if (isset($_SESSION['ClientName']))
 </div>
     
 <div id="content" >
-<div data-ng-view="" id="contentView"  ></div>
+<div data-ui-view="" id="contentView"  ></div>
 </div>
 
 <footer>
@@ -130,6 +130,7 @@ if (isset($_SESSION['ClientName']))
 <script src="bower_components/angular-route/angular-route.js"></script>
 <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 
 
 <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -149,6 +150,7 @@ if (isset($_SESSION['ClientName']))
 
 <script src="js/app.js"></script>
 <script src="js/services.js"></script>
+<script src="js/factory.js"></script>
 <script src="js/controllers.js"></script>
 <script src="js/controllersSearch.js"></script>
 <script src="js/controllersCart.js"></script>

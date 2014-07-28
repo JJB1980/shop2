@@ -11,29 +11,26 @@ include_once "dbConn.php";
 
 $GLOBALS['DEBUG']=0;
 
-if (!isset($_SESSION['adminUser'])) {
-	//$adminLoc="192.168.2.2";
-	//$adminLoc="192.168.2.4";
-	//$adminLoc="localhost";
-	//$adminUser="root";
-	//$adminPassword="";
-	$adminUser="ADMINSQLUSR";
-	$adminPassword="rty654";
-	$adminData="adminData";
-	$adminLoc="localhost";
-	/*
-	$adminUser="jjbsw_root";
-	$adminPassword="fender71";
-	$adminData="jjbswcom_admin";
-	*/
-	
-	$_SESSION["adminUser"] = $adminUser;
-	$_SESSION["adminPassword"] = $adminPassword;
-	$_SESSION["adminLoc"] = $adminLoc;
-	$_SESSION["adminData"] = $adminData;
-}
+//$adminLoc="192.168.2.2";
+//$adminLoc="192.168.2.4";
+//$adminLoc="localhost";
+//$adminUser="root";
+//$adminPassword="";
+$adminUser="ADMINSQLUSR";
+$adminPassword="rty654";
+$adminData="adminData";
+$adminLoc="localhost";
+/*
+$adminUser="jjbsw_root";
+$adminPassword="fender71";
+$adminData="jjbswcom_admin";
+*/
 
-$servName = $_SERVER['SERVER_NAME'];
+$_SESSION["adminUser"] = $adminUser;
+$_SESSION["adminPassword"] = $adminPassword;
+$_SESSION["adminLoc"] = $adminLoc;
+$_SESSION["adminData"] = $adminData;
+
 
 $dir="\\";
 $_SESSION['DIR']=$dir;
@@ -46,15 +43,11 @@ $conn = new AdminDBConn($_SESSION["adminLoc"],
 	// Check connection
 if (!$conn->connection) {
   	//$err = "Failed to connect to MySQL: " .connectError();
-  	die("error");
+  	die("database connection error");
 }
 
-if (!isset($_SESSION['ServerType'])) {
-	$_SESSION['ServerType'] = $conn->val("select ServerType from AppServer where IPAddress='{$servName}' or ServerName='{$servName}' and Status='shop.live'","ServerType");
-	//echo $_SESSION['ServerType'];
-}
-
-if (!isset($_SESSION['clientID']) && isset($_REQUEST['client'])) {
+//if (!isset($_SESSION['clientID']) && isset($_REQUEST['client'])) {
+if (isset($_REQUEST['client'])) {
 	//echo "Client=".$_REQUEST['client'];
 	$sql = "select a.ClientName,a.ImageFolder,c.ServerURL,a.DatabaseName,a.SQLUser,a.SQLPassword,b.IPAddress 
 						from ClientData a, DataServer b, ImageServer c

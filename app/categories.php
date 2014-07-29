@@ -1,11 +1,6 @@
 <?php
 
-//include_once "connect.php";
-include_once "dbConn.php";
-//include_once "sqlUtils.php";
-//include_once "utils.php";
-include_once "restUtils.php";
-session_start();
+include_once("dependencies.php");
 
 //use SqlUtils as sql;
 //use RestUtils as rest;

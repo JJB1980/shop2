@@ -1,7 +1,6 @@
 <?php
 
-session_start();
-include_once "restUtils.php";
+include_once("dependencies.php");
 
 //use RestUtils as rest;
 

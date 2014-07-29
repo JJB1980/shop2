@@ -1,9 +1,6 @@
 <?php
 
-include_once "dbConn.php";
-include_once "utils.php";
-include_once "restUtils.php";
-session_start();
+include_once("dependencies.php");
 
 //use RestUtils as rest;
 //use Utils as ut;

@@ -1,8 +1,6 @@
 <?php
 
-include_once "dbConn.php";
-include_once "utils.php";
-session_start();
+include_once("dependencies.php");
 
 //use Utils as ut;
 

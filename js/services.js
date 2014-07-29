@@ -16,7 +16,7 @@ service('Session', function () {
     this.clientID = null;
   };
   this.isAuthenticated = function () {
-      return !!this.userId;
+      return (this.userId ? true : false);
   };
   return this;
 });

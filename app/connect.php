@@ -11,6 +11,10 @@ include_once "dbConn.php";
 
 $GLOBALS['DEBUG']=0;
 
+if (!isset($_REQUEST['client'])) {
+  $_REQUEST['client'] = 1;
+}
+
 //$adminLoc="192.168.2.2";
 //$adminLoc="192.168.2.4";
 //$adminLoc="localhost";

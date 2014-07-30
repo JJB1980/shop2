@@ -62,7 +62,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
 
 app.run(function ($rootScope, Session) {
   $rootScope.$on('$stateChangeStart', function (event, next) {
-    console.log(next.templateUrl+"|"+next.auth);
+    console.log(next.templateUrl+"|"+next.auth+"|"+Session.isAuthenticated());
     if (next.auth && !Session.isAuthenticated()) {
        event.preventDefault();
     }

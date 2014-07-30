@@ -3,7 +3,7 @@
 /* Controllers */
 angular.module('StoreApp.controllers', ['ui.bootstrap']).
 
-controller('loginController', function($scope, $rootScope, $location, storeServices) {
+controller('loginController', function($scope, $rootScope, $location, storeServices, Session) {
 
 	//$scope.categoryList = [];
 	$scope.loggedIn = false;
@@ -12,7 +12,16 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 	$scope.doLogin = function (loginForm) {
 		console.log(loginForm.email+"|"+loginForm.password);
 	 	storeServices.loginServ(loginForm.email,loginForm.password,0,0,"").success(function (response) {
-			$scope.loggedIn = storeServices.doLogin(response);
+			if (response.status === "ok") {
+			  $rootScope.$broadcast('UPDATE_MENU');
+			  $rootScope.clientID = response.client;
+			  Session.create(response.token,response.ID,response.client);
+			  $location.path("/account/");
+			  $scope.loggedIn = true;
+			} else {
+			  alert(response.message);
+			  $scope.loggedIn = false;
+			}    
 			console.log("loggedIn: "+$scope.loggedIn);
 	 	});
 	};
@@ -20,7 +29,13 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 	$scope.doLogout = function () {
 	 	storeServices.loginServ("","",0,1,"").success(function (response) {
 			$scope.message = response.message;
-			$scope.loggedIn = ! storeServices.doLogout(response);
+			if (response.status === "ok") {
+			  $rootScope.$broadcast('UPDATE_MENU');
+			  Session.destroy();
+			  $scope.loggedIn = true;
+			} else {
+			 $scope.loggedIn = false; 
+			}
 	 	});
 	};
 
@@ -28,18 +43,20 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 		if ($scope.loggedIn) {
 			return;
 		}
-	 	storeServices.getClientID().success(function (response) {
-			token = $.cookie("customer-token-"+response.client);
-			if (token === "" || token === undefined) {
-				return;
+		if (Session.customerID() !== "") {
+			$scope.loggedIn = true;
+			return;
+		}
+		token = Session.getID();
+		if (token === "" || token === undefined) {
+			return;
+		}
+		storeAPI.loginServ("","",1,0,token).success(function (response) {
+			if (response.status === "ok") {
+				$scope.loggedIn = true;
+				$rootScope.$broadcast('UPDATE_MENU');
 			}
-			storeServices.loginServ("","",1,0,token).success(function (response) {
-				if (response.status === "ok") {
-					$scope.loggedIn = true;
-					$rootScope.$broadcast('UPDATE_MENU');
-				}
-			});		
-		});
+		});		
 	};
 
 	$scope.$on('AUTO_LOGIN', function() {
@@ -70,11 +87,51 @@ controller('categoriesController', function($scope, $location, storeServices) {
 
 }).
 
-controller('accountController', function($scope, storeServices) {
+controller('applicationController', function($scope, $rootScope, storeServices) {
 
-	$scope.account = null;
-	//$scope.currentPage = $route.current.templateUrl;
+	$scope.initApp = function () {
+		$rootScope.$broadcast('AUTO_LOGIN');
+	}
 	
+}).
+
+controller('accountController', function($scope, storeServices, Session) {
+
+	$scope.Account = null;
+	$scope.Invoices = null;
+	
+	$scope.accountDetails = function () {
+		storeServices.account("retrieve",Session.customerID(),"","").success(function (response) {
+			console.log(response.Invoices);			
+			$scope.Account = response.Account;
+			$scope.Invoices = response.Invoices;
+		});
+	}
+	
+	$scope.cancelOrder = function (invoiceID) {
+		console.log("Cancel: "+invoiceID);
+		if (!confirm("Cancel Order?")) {
+			return;
+		}
+		storeServices.account("cancelOrder",Session.customerID(),invoiceID,"").success(function (response) {
+			console.log(response);
+			if (response.status === "200") {
+				$scope.accountDetails();
+			} else {
+				alert(response.message);
+			}
+		});
+	}
+
+	$scope.updateAccount = function () {
+		console.log($scope.Account);
+		storeServices.account("update",Session.customerID(),"",angular.toJson($scope.Account)).success(function (response) {
+			alert(response.message);
+			console.log(response);
+		});
+	}
+	
+	$scope.accountDetails();
 }).
 
 controller('menuController', function($scope, storeServices) {

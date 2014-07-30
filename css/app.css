@@ -44,8 +44,8 @@ footer {
 	background-color: #000029;
 }
 
-.activeNav {
-	background-color: #0000A3;
+.activeNav > a {
+	color: white;
 }
 
 .catContainer {
@@ -178,7 +178,13 @@ footer {
 	color: red;
 }
 
+.tab-content{
+	padding: 0.4em;
+}
 
+.row {
+	padding: 0.4em;
+}
 
 
 /* ANIMATIONS

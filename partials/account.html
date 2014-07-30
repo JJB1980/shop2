@@ -1,3 +1,74 @@
 
 
-<p>Account...</p>
+<tabset>
+    
+    <tab heading="Acount Details">
+        <br/>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="firstName">First Name</label>
+            </div>
+            <div class="col-md-2">
+                <input type="test" id="firstName" data-ng-model="Account.FirstName"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-2">
+                <label for="surname">Surname</label>
+            </div>
+            <div class="col-md-2">
+                <input type="test" id="surname" data-ng-model="Account.Surname"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-2">
+                <label for="email">Email</label>
+            </div>
+            <div class="col-md-2">
+                <input type="test" id="email" data-ng-model="Account.Email"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-2">
+                <label for="Password">Password</label>
+            </div>
+            <div class="col-md-2">
+                <input type="password" id="Password" data-ng-model="Account.Password"/>
+            </div>            
+        </div>
+ 
+          <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-2">
+                <button data-ng-click="updateAccount()" type="button" class="btn btn-success full-width">
+                    Save</button>
+            </div>
+        </div>
+      
+    </tab>
+    
+     <tab heading="History">
+        
+        <table class="itemsTable">
+            <thead>
+                <tr><th>#</th><th>ID</th><th>Date</th><th>Time</th><th>Total</th><th>GST</th><th></th></tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="invoice in Invoices">
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ invoice.ID }}</td>
+                    <td>{{ invoice.InvoiceDate | date }}</td>
+                    <td>{{ invoice.InvoiceTime }}</td>
+                    <td>{{ invoice.Total | currency }}</td>
+                    <td>{{ invoice.GST | currency }}</td>
+                    <td><button data-ng-click="cancelOrder(invoice.ID)"
+                                data-ng-show="invoice.Cancelable"
+                                type="button" class="btn btn-warning">Cancel</button></td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </tab>
+   
+</tabset>
+

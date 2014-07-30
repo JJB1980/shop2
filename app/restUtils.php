@@ -2,14 +2,14 @@
 
 //namespace RestUtils;
 
-function sendJSON($status,$json) {
-    sendResponse($status,json_encode($json),'application/json');
+function sendJSON($status,$array) {
+    sendResponse($status,json_encode($array),'application/json');
 }
 
-function badRequest() {
+function badRequest($message="") {
     $post = array();
     $post["status"] = 400;
-    $post["statusMessage"] = getStatusCodeMessage(400);
+    $post["message"] = ($message === "" ? getStatusCodeMessage(400) : $message);
     sendJSON(400,$post);   
 }
 

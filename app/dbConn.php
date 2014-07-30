@@ -110,7 +110,8 @@ class DBConn {
         while($row = self::rowGet($rs)) {
                      $ret = $row[$fld];
         }
-	self::freeRS($rs);
+        if ($rs)
+            self::freeRS($rs);
 	return $ret;
     }
  

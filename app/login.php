@@ -36,6 +36,7 @@ function autoLogin(&$response,&$conn) {
                 $response['status'] = "ok";
                 $response['message'] = "Success.";
                 $response['ID'] = $id;
+                $response['token'] = $tok;
                 $response['client'] = $_SESSION['clientID'];
 		//echo "<ok>".$id;
 	} else {

@@ -7,34 +7,7 @@ angular.module('StoreApp.factories', []).
 factory('storeServices', function($http, $rootScope, $location, Session) {
 
   var storeAPI = {};
-
-  storeAPI.doLogin = function (response) {
-    if (response.status === "ok") {
-      $rootScope.$broadcast('UPDATE_MENU');
-      $.cookie("customer-token-"+response.client, response.token, { expires: 100 });
-      $.cookie("customer-id-"+response.client, response.ID, { expires: 100 });
-      $rootScope.clientID = response.client;
-      Session.create(response.token,response.ID,response.client);
-      $location.path("/account/");
-      return true;
-    } else {
-      alert(response.message);
-      return false;
-    }    
-  }
-  
-  storeAPI.doLogout = function (response) {
-    if (response.status === "ok") {
-      $rootScope.$broadcast('UPDATE_MENU');
-      $.cookie("customer-token-"+response.client, "");
-      $.cookie("customer-id-"+response.client, "");
-      Session.destroy();
-      return true;
-    } else {
-     return false; 
-    }
-  }
-  
+    
   storeAPI.loginServ = function (email,password,autoLogin,logout,token) {
     return $http({
       method: 'POST', 
@@ -45,6 +18,19 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
         autoLogin: autoLogin,
         logout: logout,
         token: token
+      }
+    });
+  }
+  
+  storeAPI.account = function(action,customerID,orderID,json) {
+    return $http({
+      method: 'GET', 
+      url: 'app/account.php',
+      params: {
+        action: action,
+        customerID: customerID,
+        orderID: orderID,
+        json: json
       }
     });
   }	

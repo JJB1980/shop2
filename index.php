@@ -1,9 +1,5 @@
 <?php
 
-if (!isset($_REQUEST['client'])) {
-  $_REQUEST['client'] = 1;
-}
-
 include_once "app/connect.php";
 
 ?>
@@ -23,7 +19,8 @@ include_once "app/connect.php";
 if (isset($_SESSION['ClientName']))
   echo $_SESSION['ClientName'];
 ?> - Store  
-  </title>  <meta name="description" content="">
+  </title>
+  <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!--
@@ -37,13 +34,14 @@ if (isset($_SESSION['ClientName']))
   
 </head>
 
-<body id="" data-ng-app="StoreApp" >
+<body id="" data-ng-app="StoreApp" data-ng-controller="applicationController" data-ng-init="initApp()">
 
 <!--
 <div data-my-navigation-bar=""></div>
 -->
 
-<div data-ng-controller="menuController" id="myNavBar" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<div data-ng-controller="menuController" id="myNavBar" "
+     class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -98,7 +96,7 @@ if (isset($_SESSION['ClientName']))
 </div>
     
 <div id="content" >
-<div data-ui-view="" id="contentView"  ></div>
+<div data-ui-view="" id="contentView" class="container"  ></div>
 </div>
 
 <footer>

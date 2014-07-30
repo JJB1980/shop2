@@ -36,7 +36,9 @@ function update($id) {
     $sql = "update Clients set FirstName = '".$obj->FirstName."',
         Surname = '".$obj->Surname."',
         Email = '".$obj->Email."',
-        Password = '".$obj->Password."'
+        Password = '".$obj->Password."',
+        AddressLine1 = '".$obj->AddressLine1."',
+        AddressLine2 = '".$obj->AddressLine2."'
         where ID = ".$id;
     if (!$conn->query($sql)) {
         badRequest("Failed to update.");

@@ -22,7 +22,7 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
     });
   }
   
-  storeAPI.account = function(action,customerID,orderID,json) {
+  storeAPI.account = function(action,customerID,orderID,jsonString) {
     return $http({
       method: 'GET', 
       url: 'app/account.php',
@@ -30,7 +30,7 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
         action: action,
         customerID: customerID,
         orderID: orderID,
-        json: json
+        json: jsonString
       }
     });
   }	

@@ -52,7 +52,9 @@ directive('navLink', function() {
     link: function(scope, element, attrs) {
         element.on('click',function () {
 		$("#myNavList li").removeClass("activeNav");
+		$("#myNavList li a").removeClass("activeNavLink");
 		element.parent().addClass("activeNav");
+                element.addClass("activeNavLink");
         });
     }
   }

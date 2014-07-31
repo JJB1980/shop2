@@ -44,8 +44,12 @@ footer {
 	background-color: #000029;
 }
 
-.activeNav > a {
-	color: white;
+.activeNav {
+	background-color: #00007A;
+}
+
+.activeNavLink {
+	color: #FFFFFF;
 }
 
 .catContainer {

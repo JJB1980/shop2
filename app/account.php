@@ -28,11 +28,16 @@ switch ($action) {
 
 function update($id) {
     $conn = new DataDBConn();
-    $json = xs("json");
+    $json = rawUrlDecode(xs("json"));
     if ($json === "") {
         badRequest("No Data.");
+	return;
     }
     $obj = json_decode($json);
+    if (!$obj) {
+	badRequest("Unable to decode.");
+	return;
+    }
     $sql = "update Clients set FirstName = '".$obj->FirstName."',
         Surname = '".$obj->Surname."',
         Email = '".$obj->Email."',
@@ -40,10 +45,12 @@ function update($id) {
         AddressLine1 = '".$obj->AddressLine1."',
         AddressLine2 = '".$obj->AddressLine2."'
         where ID = ".$id;
+	
     if (!$conn->query($sql)) {
         badRequest("Failed to update.");
     }
-    $response = array( "status" => "200" , "message" => "Account Updated", "sql" => $sql);
+
+    $response = array( "status" => "200" , "message" => "Account Updated", "sql" => $sql, "json" => $json);
     sendJSON(200,$response);
 }
 

@@ -125,7 +125,7 @@ controller('accountController', function($scope, storeServices, Session) {
 
 	$scope.updateAccount = function () {
 		console.log("update account");
-		var json = angular.toJson($scope.Account);
+		var json = encodeURIComponent(angular.toJson($scope.Account));
 		console.log(json);
 		storeServices.account("update",Session.customerID(),"",json).success(function (response) {
 			console.log(response);

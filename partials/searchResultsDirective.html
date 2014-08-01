@@ -38,9 +38,9 @@
     <td>{{item.Price | currency}}</td>
     <td>{{item.Available}}</td>
     <td>
-      <input type="number" class="cartItems" value="1"/>
+      <input id="cartItems{{item.ID}}" type="number" class="cartItems" value="1"/>
       
-      <button type="button" class="btn btn-sm btn-primary" data-ng-click="addToCart(item.ID)">Add to cart</button>
+      <button type="button" class="btn btn-sm btn-primary" data-ng-click="addToCart(item.ID,item.Price)">Add to cart</button>
     </td>
   </tr>
 </tbody>

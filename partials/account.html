@@ -4,60 +4,126 @@
     
     <tab heading="Acount Details">
         <br/>
+        
+        <div class="col-md-6">
+            
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label for="firstName">First Name</label>
             </div>
-            <div class="col-md-2">
-                <input type="test" id="firstName" data-ng-model="Account.FirstName"/>
+            <div class="col-md-4">
+                <input type="text" id="firstName" data-ng-model="Account.FirstName"/>
             </div>            
         </div>
          <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label for="surname">Surname</label>
             </div>
-            <div class="col-md-2">
-                <input type="test" id="surname" data-ng-model="Account.Surname"/>
+            <div class="col-md-4">
+                <input type="text" id="surname" data-ng-model="Account.Surname"/>
             </div>            
         </div>
          <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label for="email">Email</label>
             </div>
-            <div class="col-md-2">
-                <input type="test" id="email" data-ng-model="Account.Email"/>
+            <div class="col-md-4">
+                <input type="text" id="email" data-ng-model="Account.Email"/>
             </div>            
         </div>
          <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <label for="Password">Password</label>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <input type="password" id="Password" data-ng-model="Account.Password"/>
             </div>            
         </div>
-         
+        
          <div class="row">
-            <div class="col-md-2">
-                <label for="AddressLine1">Address 1</label>
+            <div class="col-md-4">
+                <label for="PhoneNumber1">Phone Number</label>
             </div>
-            <div class="col-md-2">
-                <input type="text" id="AddressLine1" data-ng-model="Account.AddressLine1"/>
+            <div class="col-md-4">
+                <input type="text" id="PhoneNumber1" data-ng-model="Account.PhoneNumber1"/>
             </div>            
         </div>
          <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-4">
+                <label for="MobileNumber">Mobile Number</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="MobileNumber" data-ng-model="Account.MobileNumber"/>
+            </div>            
+         </div>
+         
+        </div>
+
+         
+         <div class="col-md-6">
+            
+            <div class="row">
+            <div class="col-md-4">
+                <label for="AddressLine1">Address 1</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="AddressLine1" data-ng-model="Account.AddressLine1"/>
+            </div>            
+            </div>
+         <div class="row">
+            <div class="col-md-4">
                 <label for="AddressLine2">Address 2</label>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <input type="text" id="AddressLine2" data-ng-model="Account.AddressLine2"/>
             </div>            
         </div>
+         <div class="row">
+            <div class="col-md-4">
+                <label for="AddressCity">City</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="AddressCity" data-ng-model="Account.AddressCity"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <label for="AddressPostCode">Postcode</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="AddressPostCode" data-ng-model="Account.AddressPostCode"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <label for="AddressState">State</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="AddressState" data-ng-model="Account.AddressState"/>
+            </div>            
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <label for="AddressCountry">Country</label>
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="AddressCountry" data-ng-model="Account.AddressCountry"/>
+            </div>            
+        </div>
         
+         <div class="row">
+            <div class="col-md-4">
+                <label for="EnableUpdates">Email Updates</label>
+            </div>
+            <div class="col-md-4">
+                <input type="checkbox" id="EnableUpdates" data-ng-model="Account.EnableUpdates"/>
+            </div>            
+        </div>
+         
+        </div>
         
           <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <button data-ng-click="updateAccount()" type="button" class="btn btn-success full-width">
                     Save</button>
             </div>

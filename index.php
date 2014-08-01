@@ -42,7 +42,7 @@ if (isset($_SESSION['ClientName']))
 
 <div data-ng-controller="menuController" id="myNavBar" "
      class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-	<div class="container">
+	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 			  <span class="sr-only">Toggle navigation</span>
@@ -63,6 +63,14 @@ if (isset($_SESSION['ClientName']))
 		  </ul>
 		  
 		</div><!--/.nav-collapse -->
+	</div>
+</div>
+
+<div id="cartViewContainer">
+	<div data-ng-controller="cartController" id="cartView">
+		<span class="bold">Items in Cart: </span> {{ cart.itemsInCart }} - 
+		<span class="bold">Total Value of Cart: </span> {{ cart.valueOfCart | currency }} 
+		&nbsp;&nbsp;<button data-ng-click="emptyCart()" type="button" class="btn btn-xs btn-danger">Empty Cart</button>
 	</div>
 </div>
 

@@ -6,7 +6,6 @@ angular.module('StoreApp.controllers', ['ui.bootstrap']).
 controller('loginController', function($scope, $rootScope, $location, storeServices, Session) {
 
 	//$scope.categoryList = [];
-	$scope.loggedIn = false;
 	$scope.client = "";
 	
 	$scope.doLogin = function (loginForm) {
@@ -15,12 +14,10 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 			if (response.status === "ok") {
 			  $rootScope.$broadcast('UPDATE_MENU');
 			  $rootScope.clientID = response.client;
-			  Session.create(response.token,response.ID,response.client);
+			  Session.create(response.token,response.ID);
 			  $location.path("/account/");
-			  $scope.loggedIn = true;
 			} else {
 			  alert(response.message);
-			  $scope.loggedIn = false;
 			}    
 			console.log("loggedIn: "+$scope.loggedIn);
 	 	});
@@ -32,9 +29,6 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 			if (response.status === "ok") {
 			  $rootScope.$broadcast('UPDATE_MENU');
 			  Session.destroy();
-			  $scope.loggedIn = true;
-			} else {
-			 $scope.loggedIn = false; 
 			}
 	 	});
 	};
@@ -44,22 +38,20 @@ controller('loginController', function($scope, $rootScope, $location, storeServi
 			return;
 		}
 		if (Session.customerID() !== "") {
-			$scope.loggedIn = true;
 			return;
 		}
-		token = Session.getID();
+		var token = Session.getID();
 		if (token === "" || token === undefined) {
 			return;
 		}
 		storeAPI.loginServ("","",1,0,token).success(function (response) {
 			if (response.status === "ok") {
-				$scope.loggedIn = true;
 				$rootScope.$broadcast('UPDATE_MENU');
 			}
 		});		
 	};
 
-	$scope.$on('AUTO_LOGIN', function() {
+	$rootScope.$on('AUTO_LOGIN', function() {
 		console.log("AUTO_LOGIN");
 		$scope.autoLogin();
 	});
@@ -87,24 +79,32 @@ controller('categoriesController', function($scope, $location, storeServices) {
 
 }).
 
-controller('applicationController', function($scope, $rootScope, storeServices) {
+controller('applicationController', function($scope, $rootScope, $timeout, storeServices, Session, CartAPI) {
 
 	$scope.initApp = function () {
-		$rootScope.$broadcast('AUTO_LOGIN');
-	}
-	
+		storeServices.initApplication().success(function (response) {
+			Session.setClient(response.ClientID);
+			CartAPI.setGST(response.GST);
+			CartAPI.initCart();
+			storeServices.autoLogin();
+		}).error(function (data, status, headers, config) {
+			alert("Error: "+data);
+		});
+	};
+		
 }).
 
-controller('accountController', function($scope, storeServices, Session) {
+controller('accountController', function($scope, storeServices, Session, API) {
 
 	$scope.Account = null;
 	$scope.Invoices = null;
 	
 	$scope.accountDetails = function () {
 		storeServices.account("retrieve",Session.customerID(),"","").success(function (response) {
-			console.log(response.Invoices);			
+			console.log(response);			
 			$scope.Account = response.Account;
 			$scope.Invoices = response.Invoices;
+			//$scope.$apply();
 		});
 	}
 	
@@ -125,7 +125,7 @@ controller('accountController', function($scope, storeServices, Session) {
 
 	$scope.updateAccount = function () {
 		console.log("update account");
-		var json = encodeURIComponent(angular.toJson($scope.Account));
+		var json = API.toJsonUri($scope.Account);
 		console.log(json);
 		storeServices.account("update",Session.customerID(),"",json).success(function (response) {
 			console.log(response);
@@ -168,10 +168,6 @@ controller('homeController', function($scope, $sce, $rootScope, storeServices) {
 
 	$scope.returnHomeMessage = function () {
 		return $sce.trustAsHtml($scope.homeDetails.message);
-	}
-
-	$scope.autoLogin = function () {
-		$rootScope.$broadcast('AUTO_LOGIN');
 	}
 	
 	$scope.loadHome();

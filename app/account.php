@@ -43,7 +43,14 @@ function update($id) {
         Email = '".$obj->Email."',
         Password = '".$obj->Password."',
         AddressLine1 = '".$obj->AddressLine1."',
-        AddressLine2 = '".$obj->AddressLine2."'
+        AddressLine2 = '".$obj->AddressLine2."',
+        AddressCity = '".$obj->AddressCity."',
+        AddressPostCode = '".$obj->AddressPostCode."',
+        AddressState = '".$obj->AddressState."',
+        AddressCountry = '".$obj->AddressCountry."',
+        PhoneNumber1 = '".$obj->PhoneNumber1."',
+        MobileNumber = '".$obj->MobileNumber."',
+        EnableUpdates = '".($obj->EnableUpdates ? true : false)."'
         where ID = ".$id;
 	
     if (!$conn->query($sql)) {
@@ -63,18 +70,20 @@ function retrieve($id) {
     $response = array();
     
     $account = array();
-    $row = $conn->row();
-    $account['FirstName'] = $row['FirstName'];
-    $account['Surname'] = $row['Surname'];
-    $account['Email'] = $row['Email'];
-    $account['Password'] = $row['Password'];
-    $account['AddressLine1'] = $row['AddressLine1'];
-    $account['AddressLine2'] = $row['AddressLine2'];
-    $account['AddressCity'] = $row['AddressCity'];
-    $account['AddressPostCode'] = $row['AddressPostCode'];
-    $account['AddressState'] = $row['AddressState'];
-    $account['AddressCountry'] = $row['AddressCountry'];
-    $account['EnableUpdates'] = $row['EnableUpdates'];
+    $obj = $conn->obj();
+    $account['FirstName'] = $obj->FirstName;
+    $account['Surname'] = $obj->Surname;
+    $account['Email'] = $obj->Email;
+    $account['Password'] = $obj->Password;
+    $account['AddressLine1'] = $obj->AddressLine1;
+    $account['AddressLine2'] = $obj->AddressLine2;
+    $account['AddressCity'] = $obj->AddressCity;
+    $account['AddressPostCode'] = $obj->AddressPostCode;
+    $account['AddressState'] = $obj->AddressState;
+    $account['AddressCountry'] = $obj->AddressCountry;
+    $account['EnableUpdates'] = ($obj->EnableUpdates ? true : false);
+    $account['PhoneNumber1'] = $obj->PhoneNumber1;
+    $account['MobileNumber'] = $obj->MobileNumber;
     $conn->free();
    
     $response["Account"] = $account;
@@ -82,14 +91,14 @@ function retrieve($id) {
     
     $sql = "select * from InvoiceHeader where Online = 'true' and  ClientID = ".$id;
     $conn->query($sql);
-    while ($row = $conn->row()) {
+    while ($obj = $conn->obj()) {
         $invoice = array();
-        $invID = $row["ID"];
+        $invID = $obj->ID;
         $invoice["ID"] = $invID;
-        $invoice["InvoiceDate"] = foDate($row["InvoiceDate"]);
-        $invoice["InvoiceTime"] = $row["InvoiceTime"];
-        $invoice["Total"] = $row["Total"];
-        $invoice["GST"] = $row["GST"];
+        $invoice["InvoiceDate"] = foDate($obj->InvoiceDate);
+        $invoice["InvoiceTime"] = $obj->InvoiceTime;
+        $invoice["Total"] = $obj->Total;
+        $invoice["GST"] = $obj->GST;
         $invoice["Cancelable"] = (invoiceIsOpen($invID,$conn) === "" ? true : false);
         array_push($response["Invoices"],$invoice);
     }

@@ -76,7 +76,7 @@ if (isset($_REQUEST['client'])) {
 if(!isset($_SESSION['clientUser'])) {
 
 	//no client supplied...
-	header('Location: https://www.google.com');
+	header('Location: http://jjbsw.com');
 	exit;
 }
 

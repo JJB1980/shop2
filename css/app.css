@@ -42,6 +42,7 @@ footer {
 
 #myNavBar {
 	background-color: #000029;
+	z-index: 99999;
 }
 
 .activeNav {
@@ -58,7 +59,7 @@ footer {
 	float:left;
 	margin-right: 0.5em;
 	margin-left: 0.5em;
-	z-index: 1;
+	z-index: 9999;
 }
 
 #categories {
@@ -97,13 +98,35 @@ footer {
 	position: relative;
 }
 
+#cartViewContainer {
+	position: fixed;
+	top: 3.5em;
+	width: 80%;
+	z-index: 999;
+}
+#cartView {
+	float:right;
+	border-bottom: 1px solid gray;
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+	border-radius: 5px;
+	padding: 0.2em;
+	background-color: white;
+	font-size: 0.8em;
+}
+
+.bold {
+	font-weight: bold;
+}
+
 #content {
 	float: left;
 	min-height: 30em;
 	position: relative;
-	top: 4em;
+	top: 5.5em;
 	margin: 1em;
 	width: 70%;
+	z-index: 10;
 }
 
 #contentView {
@@ -190,6 +213,9 @@ footer {
 	padding: 0.4em;
 }
 
+.col {
+	float: left;
+}
 
 /* ANIMATIONS
 ============================================================================= */

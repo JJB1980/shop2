@@ -67,13 +67,24 @@ class DBConn {
         }
     }
 
+    public function obj() {
+        return self::objGet($this->resultSet);
+    }
+
+    public static function objGet($resultSet) {
+        if ($resultSet)
+            return mysqli_fetch_object($resultSet);
+        else
+            return null;
+    }
+    
     public function row() {
         return self::rowGet($this->resultSet);
     }
 
     public static function rowGet($resultSet) {
         if (!$resultSet)
-            return false;
+            return null;
         return mysqli_fetch_array($resultSet);      
     }
  

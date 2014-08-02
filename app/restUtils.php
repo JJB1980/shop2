@@ -6,6 +6,13 @@ function sendJSON($status,$array) {
     sendResponse($status,json_encode($array),'application/json');
 }
 
+function sendMsg($status,$msg) {
+    $array = array();
+    $array["status"] = $status;
+    $array["message"] = $msg;
+    sendResponse($status,json_encode($array),'application/json');
+}
+
 function badRequest($message="") {
     $post = array();
     $post["status"] = 400;

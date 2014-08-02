@@ -54,6 +54,10 @@ app.config(function($stateProvider, $urlRouterProvider) {
 	  controller: "accountController",
 	  auth: true }).
 
+    state("cart", {url: "/cart/",
+	  templateUrl: "partials/viewCart.html",
+	  controller: "cartController"}).
+
     state("stockItem", {url: "/stockItem/:id",
 	  templateUrl: "partials/stockItem.html",
 	  controller: "stockItemController"});

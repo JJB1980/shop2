@@ -22,24 +22,28 @@ service('CartAPI', function ($rootScope, $timeout, Session) {
       this.cart.items = [];
     }
   };
-  this.add = function (id,qty,price) {
-    var item = {}, index = -1;
+  this.add = function (item,qty) { //id,qty,price,code,descr,gst) {
+    var index = -1;
     for (var i = 0; i < this.cart.items.length; i++) {
-      if (this.cart.items[i].id === id) {
-        item = this.cart.items[i];
-        item.qty = qty;
+      if (this.cart.items[i].ID === item.ID) {
+        if (parseInt(this.cart.items[i].Available) < parseInt(qty)) {
+          alert("Quantity greater than items available.");
+          return;
+        }
+        this.cart.items[i].qty = qty;
         index = i;
       }
     }
     if (index < 0) {
-      item.id = id;
+      if (item.Available < parseInt(qty)) {
+        alert("Quantity greater than items available.");
+        return;
+      }
       item.qty = qty;
-      item.price = price;
-      index = this.cart.items.length;
-    }
-    this.cart.items[index] = item;
-    this.setCart(this.cart);
+      this.cart.items.push(item);
+   }
     this.updateCart();
+    this.setCart(this.cart);
     console.log(this.cart);
   };
   this.empty = function () {
@@ -54,7 +58,7 @@ service('CartAPI', function ($rootScope, $timeout, Session) {
     for (var i = 0; i < this.cart.items.length; i++) {
       var item = this.cart.items[i], qty = parseInt(item.qty);
       items += qty;
-      value +=  (parseFloat(item.price) * qty);
+      value +=  (parseFloat(item.Price) * qty);
     }
     this.cart.itemsInCart = items;
     this.cart.valueOfCart = value;

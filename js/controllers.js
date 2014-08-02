@@ -210,7 +210,7 @@ controller('contactController', function($scope, $sce, storeServices) {
 
 }).
  
-controller('stockItemController', function($scope, $stateParams, storeServices) {
+controller('stockItemController', function($scope, $stateParams, storeServices, CartAPI) {
 	$scope.id = $stateParams.id;
 	$scope.stockItem = null;
 	$scope.myInterval = 3000;
@@ -232,6 +232,12 @@ controller('stockItemController', function($scope, $stateParams, storeServices) 
 		
 
 	});
+
+	$scope.addToCart = function (item) { //id,price,code,descr,gst,avail) {
+	    var qty = window.document.getElementById("cartItems"+item.ID).value;
+	    console.log("add to cart: "+item.ID+","+qty);
+	    CartAPI.add(item,qty); //id,qty,price,code,descr,gst,avail);
+	};
   
 	$scope.GetCarouselActive = function (index) {
 	

@@ -46,7 +46,7 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
   
   storeAPI.account = function(action,customerID,orderID,jsonString) {
     return $http({
-      method: 'GET', 
+      method: 'POST', 
       url: 'app/account.php',
       params: {
         action: action,

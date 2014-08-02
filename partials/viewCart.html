@@ -1,0 +1,39 @@
+
+<h3>Cart Details</h3>
+
+<table class="itemsTable" data-ng-init="updateCart()">
+    <thead>
+        <tr><th>#</th><th>Code</th><th>Description</th><th>Price</th><th>Total</th><th>Quantity</th><th></th></tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="item in cart.items" data-ng-show="item.qty">
+            <td>{{ ($index + 1) }}</td>
+            <td>{{ item.Code }}</td>
+            <td>
+                <img data-ng-show="item.imgSrc" src="{{item.imgSrc}}" height="{{item.imgHeight}}" width="{{item.imgWidth}}" />
+                <a href="#/stockItem/{{item.ID}}">
+                &nbsp;&nbsp;{{item.Name}}
+                </a>
+            </td>
+            <td>{{ item.Price | currency }}</td>
+            <td>{{ (item.Price * item.qty) | currency }}</td>
+            <td><input type="number" value="{{ item.qty }}" class="cartItems" id="qty{{item.ID}}"/></td>
+            <td><button data-ng-click="updateItem(item)" type="button" class="btn btn-sm btn-primary">Update</button></td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{ cart.valueOfCart | currency }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+</table>
+
+<br/>
+<button data-ng-click="checkOut()" type="button" class="btn btn-success">Checkout</button>
+&nbsp;&nbsp;<button data-ng-click="emptyCart()" type="button" class="btn btn-danger">Empty Cart</button>

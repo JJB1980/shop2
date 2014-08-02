@@ -68,7 +68,15 @@ while ($ir = $conn->row()) {
 		$image["imgSrc"] = $img; // ."?" .rand(1000,10000000);
 		$image["imgHeight"] = $newHeight;
 		$image["imgWidth"] = $newWidth;
-
+		if ($i === 1) {
+			list($width, $height, $type, $attr) = getimagesize($file); 
+			$aspect = $width / $height;
+			$newWidth = 65;
+			$newHeight = $newWidth / $aspect;		
+			$response["imgSrc"] = $img; // ."?" .rand(1000,10000000);
+			$response["imgHeight"] = $newHeight;
+			$response["imgWidth"] = $newWidth;
+		}
 		array_push($response["Images"],$image);				 
 	}
 }	

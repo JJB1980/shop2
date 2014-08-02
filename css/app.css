@@ -100,10 +100,11 @@ footer {
 
 #cartViewContainer {
 	position: fixed;
-	top: 3.5em;
-	width: 80%;
+	top: 3.3em;
+	width: 75%;
 	z-index: 999;
 }
+
 #cartView {
 	float:right;
 	border-bottom: 1px solid gray;
@@ -111,6 +112,7 @@ footer {
 	border-right: 1px solid gray;
 	border-radius: 5px;
 	padding: 0.2em;
+	padding-top: 0.5em;
 	background-color: white;
 	font-size: 0.8em;
 }

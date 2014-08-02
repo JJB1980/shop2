@@ -26,10 +26,10 @@ controller('searchController', function($scope, $stateParams, storeServices, Car
        
     //$scope.searchType = 1;
  
-    $scope.addToCart = function (id,price) {
-        var qty = window.document.getElementById("cartItems"+id).value;
-        console.log("add to cart: "+id+","+qty);
-        CartAPI.add(id,qty,price);
+    $scope.addToCart = function (item) { //id,price,code,descr,gst,avail) {
+        var qty = window.document.getElementById("cartItems"+item.ID).value;
+        console.log("add to cart: "+item.ID+","+qty);
+        CartAPI.add(item,qty); //id,qty,price,code,descr,gst,avail);
     };
  
     $scope.loadResults = function () {

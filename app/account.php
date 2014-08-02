@@ -24,6 +24,9 @@ switch ($action) {
     case "cancelOrder":
         cancelOrder(xs("orderID"));
         break;
+    case "saveCart":
+        saveInvoice();
+        break;
 }
 
 function update($id) {
@@ -153,6 +156,116 @@ function invoiceIsOpen($invoiceID,&$conn) {
 		return $invoiceID."<error>Payment Already Received";
 	}
 	return "";
+}
+
+function saveInvoice() {
+
+    $json = rawUrlDecode(xs("json"));
+    $inv = json_decode($json);
+
+    $conn = new DataDBConn();
+    $aconn = new AdminDBConn();
+    
+    $invoiceID = xs("invID");
+    $shopUser = xs("customerID");
+       
+    if ($shopUser == "") {
+	    badRequest("Not Logged In");
+	    return;
+    }
+    
+    if ($shopUser != $_SESSION['shopUser']) {
+	    badRequest("Invalid User");
+	    return;
+    }
+
+    $newStatus = $conn->getAccPar("ECom.Status.New");
+	    
+    if ($invoiceID == 0)
+	    $invoiceID = createNew($newStatus,$shopUser,$conn);
+    
+    if ($invoiceID == 0)	{
+	    badRequest("Unable to create invoice.");
+	    return;
+    }
+
+    $test = invoiceIsOpen($invoiceID,$conn);
+    if ($test !== "") {
+	    badRequest($test);
+	    return;
+    }
+
+    $sql = "delete from InvoiceLine where InvoiceHeader = ".$invoiceID;
+    $conn->query($sql);
+
+    $GST = $aconn->getCliPar("GST.component");
+    $lineCount = count($inv);
+    $totalAmount = 0; $totalGST = 0;
+    $notation = "Order #".$invoiceID." for $";
+    for ($i = 0; $i < $lineCount; $i++) {
+	//$invCode = $inv[$i]->Code;
+	$invID = $inv[$i]->ID; //$conn->val("select ID from Inventory where StoreCode = '".$invCode."'","ID");
+	if ($invID != "" && $inv[$i]->qty > 0) {
+	    $qty = $inv[$i]->qty;
+	    $price = $inv[$i]->Price;
+	    $total = $qty * $price;
+	    $totGST = 0; 
+	    $discount = applyDiscount($invID,$conn);			
+	    if ($inv[$i]->ExcludeGST != "true" && $GST != "") {
+		$totGST = $total * $GST;
+	    }
+	    $sql = "insert into InvoiceLine (InventoryID,InvoiceHeader,Quantity,Total,UnitPrice,GSTTotal,Discount) VALUES ";
+	    $sql.="(".$invID.",".$invoiceID.",".$qty.",".nf($total).",".$price.",".nf($totGST).",".$discount.")";
+	    $conn->query($sql);
+	    $totalAmount += $total;
+	    $totalGST += $totGST;
+	}
+    }
+
+    $post = (float)$conn->val("select Amount from Postage where PostageCode = (select PostageCode from InvoiceHeader where ID = '".$invoiceID."')","Amount");
+
+    $sql = "update InvoiceHeader set Total = ".nf($totalAmount).", GST = ".nf($totalGST)." where ID = ".$invoiceID;
+    $conn->query($sql);
+    
+    $notAmt = $totalAmount+$post;
+    $notation.=$notAmt;
+    sendInvoiceEmail($notation,$shopUser,$invoiceID,$conn);	
+
+    $response = array();
+    $response["status"] = "ok";
+    $response["message"] = "Checkout Complete. #".$invoiceID;
+    sendJSON(200,$response);
+}
+
+function sendInvoiceEmail($msg,$custID,$invID,&$conn) {
+	return;
+	$msg = wordwrap($msg,70);
+	$to = $conn->val("select Email from Clients where ID = ".$custID,"Email");
+	//$to = "jjbowden1980@hotmail.com";
+	$headers = "From: ".$conn->getAccPar("ECom.StoreEmail");
+	// send email
+	mail($to,"Invoice #".$invID,$msg,$headers);
+}
+
+function applyDiscount($invID,&$conn) {
+	$discount = 0;
+	$pct = $conn->val("select Percentage from Specials where InventoryID = ".$invID,"Percentage");
+	if ($pct != "") {
+		$price = $conn->val("select Price from Inventory where ID = ".$invID,"Price");
+		$discount = $price * $pct;
+		$discount = nf($discount);
+	}
+	return $discount;
+}
+
+function createNew($newStatus,$client,&$conn) {
+	$post = xs("postage");
+	$sql = "insert into InvoiceHeader (InvoiceDate,InvoiceTime,Viewed,StatusCode,ClientID,PaymentReceived,Online,PostageCode) 
+										VALUES ('".dateFI()."','".timeFI()."','no','".$newStatus."',".$client.",'no','true','".$post."')";
+	if ($conn->query($sql)) {
+		$id = $conn->insertID();
+	}
+	return $id;
 }
 
 ?>

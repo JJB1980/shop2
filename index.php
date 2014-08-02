@@ -70,7 +70,6 @@ if (isset($_SESSION['ClientName']))
 	<div data-ng-controller="cartController" id="cartView">
 		<span class="bold">Items in Cart: </span> {{ cart.itemsInCart }} - 
 		<span class="bold">Total Value of Cart: </span> {{ cart.valueOfCart | currency }} 
-		&nbsp;&nbsp;<button data-ng-click="emptyCart()" type="button" class="btn btn-xs btn-danger">Empty Cart</button>
 	</div>
 </div>
 

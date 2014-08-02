@@ -87,6 +87,7 @@ while ($r = $conn->row()) {
 	$row["Price"] = $r["Price"];
 	$row["Available"] = $r["AvailableItems"];	
 	$row["Code"] = $r["StoreCode"];	
+	$row["ExcludeGST"] = ($r["ExcludeGST"] === "true" ? true : false);	
 	
 	$isql = "select * from InventoryImage where InventoryID = ". $r["ID"]." order by ImageNo asc";
 	$imgRes = $conn->queryGet($isql);

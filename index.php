@@ -55,7 +55,7 @@ if (isset($_SESSION['ClientName']))
 		<div class="collapse navbar-collapse">
 		  <ul id="myNavList" class="nav navbar-nav">
 		
-			<li data-ng-class="" data-ng-repeat="menuItem in menuList">
+			<li data-ng-class="" data-ng-repeat="menuItem in menuList" id="menu_{{ menuItem.id }}">
 				<a class="nav-link" href="#{{menuItem.link}}">
 				  {{menuItem.title}}</a>
 			</li>          

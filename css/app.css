@@ -87,6 +87,7 @@ footer {
 	color: #B2B2CC;
 	font-weight: bold;
 	font-size: 0.8em;
+	background-color: white;
 }
 
 .toggleCats:hover {
@@ -113,7 +114,8 @@ footer {
 	border-radius: 5px;
 	padding: 0.2em;
 	padding-top: 0.5em;
-	background-color: white;
+	background-color: #000029;
+	color: white;
 	font-size: 0.8em;
 }
 

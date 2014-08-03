@@ -17,7 +17,7 @@
             </td>
             <td>{{ item.Price | currency }}</td>
             <td>{{ (item.Price * item.qty) | currency }}</td>
-            <td><input type="number" value="{{ item.qty }}" class="cartItems" id="qty{{item.ID}}"/></td>
+            <td><input type="number" value="{{ item.qty }}" class="cartItems" id="cartItems{{item.ID}}"/></td>
             <td><button data-ng-click="updateItem(item)" type="button" class="btn btn-sm btn-primary">Update</button></td>
         </tr>
     </tbody>

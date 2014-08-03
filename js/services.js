@@ -7,11 +7,29 @@ angular.module('StoreApp.services', []).
 service('API', function () {
   this.toJsonUri = function (jsonObj) {
     return encodeURIComponent(angular.toJson(jsonObj));
+  };
+  this.isInt = function (n) {
+    n = parseInt(n);
+    return (Math.ceil(parseFloat(n)) === n);
+  };
+  this.isNum = function (n) {
+    var ok = this.isInt(n);
+    if (ok && n < 0) {
+      ok = false;
+    }
+    console.log("n:"+n+"|"+ok);
+    return ok;
+  };
+  this.val = function (id) {
+    return this.elem(id).value;
+  }
+  this.elem = function (id) {
+    return window.document.getElementById(id);
   }
   return this;
 }).
 
-service('CartAPI', function ($rootScope, $timeout, Session) {
+service('CartAPI', function ($rootScope, $timeout, Session, API) {
   this.initCart = function() {
     var cart = this.getCart();
     if (cart) {
@@ -24,21 +42,17 @@ service('CartAPI', function ($rootScope, $timeout, Session) {
   };
   this.add = function (item,qty) { //id,qty,price,code,descr,gst) {
     var index = -1;
+    if (parseInt(item.Available) < parseInt(qty)) {
+      alert("Quantity greater than items available.");
+      return;
+    }
     for (var i = 0; i < this.cart.items.length; i++) {
       if (this.cart.items[i].ID === item.ID) {
-        if (parseInt(this.cart.items[i].Available) < parseInt(qty)) {
-          alert("Quantity greater than items available.");
-          return;
-        }
         this.cart.items[i].qty = qty;
         index = i;
       }
     }
     if (index < 0) {
-      if (item.Available < parseInt(qty)) {
-        alert("Quantity greater than items available.");
-        return;
-      }
       item.qty = qty;
       this.cart.items.push(item);
    }
@@ -64,6 +78,15 @@ service('CartAPI', function ($rootScope, $timeout, Session) {
     this.cart.valueOfCart = value;
     console.log("Value of cart: "+value);
     $rootScope.$broadcast("CART_CHANGED");
+  }
+  this.getQty = function (id) {
+    var qty = API.val(id);
+    if (!API.isNum(qty)) {
+            alert("Not a valid number");
+            API.elem(id).focus();
+            qty = -1;
+    }
+    return qty;
   }
   this.myCart = function () {
     return this.cart;

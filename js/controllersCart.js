@@ -55,7 +55,10 @@ controller('cartController', function($scope, storeServices, Session, CartAPI, A
     };
 
     $scope.updateItem = function (item) {
-        var qty = window.document.getElementById("qty"+item.ID).value;
+        var qty = CartAPI.getQty("cartItems"+item.ID);
+        if (qty < 0) {
+                return;
+        }
         CartAPI.add(item,qty);
         $scope.updateCart();
     };

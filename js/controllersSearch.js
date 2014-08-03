@@ -3,7 +3,7 @@
 /* Controllers */
 angular.module('StoreApp.controllersSearch', ['ui.bootstrap']).
 
-controller('searchController', function($scope, $stateParams, storeServices, CartAPI, Session) {
+controller('searchController', function($scope, $stateParams, storeServices, CartAPI, Session, API) {
 
     $scope.searchResults = null;
     $scope.currentPage = 1;
@@ -27,7 +27,10 @@ controller('searchController', function($scope, $stateParams, storeServices, Car
     //$scope.searchType = 1;
  
     $scope.addToCart = function (item) { //id,price,code,descr,gst,avail) {
-        var qty = window.document.getElementById("cartItems"+item.ID).value;
+        var qty = CartAPI.getQty("cartItems"+item.ID);
+        if (qty < 0) {
+                return;
+        }
         console.log("add to cart: "+item.ID+","+qty);
         CartAPI.add(item,qty); //id,qty,price,code,descr,gst,avail);
     };

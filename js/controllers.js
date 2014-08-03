@@ -210,7 +210,7 @@ controller('contactController', function($scope, $sce, storeServices) {
 
 }).
  
-controller('stockItemController', function($scope, $stateParams, storeServices, CartAPI) {
+controller('stockItemController', function($scope, $stateParams, storeServices, CartAPI, API) {
 	$scope.id = $stateParams.id;
 	$scope.stockItem = null;
 	$scope.myInterval = 3000;
@@ -221,7 +221,7 @@ controller('stockItemController', function($scope, $stateParams, storeServices, 
 	
 		// log the id for also viewed search.
 		var refer = $.cookie("client-id");
-		if (isNaN(refer))
+		if (!API.isNum(refer))
 			refer = "";
 		var url = "app/logClient.php"; //?action=doit&ref="+refer;
 		var params = { action: "doit", ref: refer };
@@ -234,9 +234,12 @@ controller('stockItemController', function($scope, $stateParams, storeServices, 
 	});
 
 	$scope.addToCart = function (item) { //id,price,code,descr,gst,avail) {
-	    var qty = window.document.getElementById("cartItems"+item.ID).value;
-	    console.log("add to cart: "+item.ID+","+qty);
-	    CartAPI.add(item,qty); //id,qty,price,code,descr,gst,avail);
+		var qty = CartAPI.getQty("cartItems"+item.ID);
+		if (qty < 0) {
+			return;
+		}
+		console.log("add to cart: "+item.ID+","+qty);
+		CartAPI.add(item,qty); //id,qty,price,code,descr,gst,avail);
 	};
   
 	$scope.GetCarouselActive = function (index) {

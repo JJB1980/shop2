@@ -64,9 +64,18 @@ app.config(function($stateProvider, $urlRouterProvider) {
     
 });
 
-app.run(function ($rootScope, Session) {
+app.run(function ($rootScope, $timeout, Session, API) {
   $rootScope.$on('$stateChangeStart', function (event, next) {
     console.log(next.templateUrl+"|"+next.auth+"|"+Session.isAuthenticated());
+    //console.log(next);
+    //console.log("menu_"+next.name);
+    $timeout(function () {
+      var el = $("#menu_"+next.name);
+      if (el) {
+	$("#myNavList li").removeClass("activeNav");
+	el.addClass("activeNav");
+      }
+    },500);
     if (next.auth && !Session.isAuthenticated()) {
        event.preventDefault();
     }

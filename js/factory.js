@@ -8,11 +8,21 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
 
   var storeAPI = {};
 
+    storeAPI.node = function () {
+        return "http://localhost:3000/";
+    };
+  
     storeAPI.initApplication = function () {
-        return $http({
-          method: 'GET', 
-          url: 'app/application.php'
-        });
+        if (window._LOCAL) {
+            url = this.node()+"appinit?callback=JSON_CALLBACK";
+            console.log(url);
+            return $http.jsonp(url);
+        } else {
+            return $http({
+               method: 'GET', 
+               url: 'app/application.php'
+             });
+        }
     };
       
     storeAPI.autoLogin = function () {
@@ -76,10 +86,16 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
   };	
 
   storeAPI.getCategories = function() {
-    return $http({
-      method: 'GET', 
-      url: 'app/categories.php'
-    });
+    if (window._LOCAL) {
+        url = this.node()+"categories?callback=JSON_CALLBACK";
+        console.log(url);
+        return $http.jsonp(url);
+    } else {
+        return $http({
+          method: 'GET', 
+          url: 'app/categories.php'
+        });
+    }
   };
 
   storeAPI.getMenu = function() {
@@ -90,24 +106,42 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
   };	
 
   storeAPI.getHome = function() {
-    return $http({
-      method: 'GET', 
-      url: 'app/home.php'
-    });
+    if (window._LOCAL) {
+        url = this.node()+"home?callback=JSON_CALLBACK";
+        console.log(url);
+        return $http.jsonp(url);
+    } else {
+        return $http({
+          method: 'GET', 
+          url: 'app/home.php'
+        });
+    }
   };	
 
   storeAPI.getAbout = function() {
-    return $http({
-      method: 'GET', 
-      url: 'app/about.php'
-    });
+    if (window._LOCAL) {
+        url = this.node()+"about?callback=JSON_CALLBACK";
+        console.log(url);
+        return $http.jsonp(url);
+    } else {
+        return $http({
+          method: 'GET', 
+          url: 'app/about.php'
+        });
+    }
   };
     
   storeAPI.getContact = function() {
-    return $http({
-      method: 'GET', 
-      url: 'app/contact.php'
-    });
+    if (window._LOCAL) {
+        url = storeAPI.node()+"contact?callback=JSON_CALLBACK";
+        console.log(url);
+        return $http.jsonp(url);
+    } else {
+        return $http({
+          method: 'GET', 
+          url: 'app/contact.php'
+        });
+    }
   };
   
   storeAPI.runSearch = function (searchType, query, page, id, cat, subcat1, subcat2) {
@@ -129,13 +163,19 @@ factory('storeServices', function($http, $rootScope, $location, Session) {
   };	
 
   storeAPI.getStockItem = function(idIn) {
-    return $http({
-      method: 'GET', 
-      url: 'app/stockItem.php',
-      params: {
-        id: idIn
-      }
-    });
+    if (window._LOCAL) {
+        url = this.node()+"stockItem/"+idIn+"/?callback=JSON_CALLBACK";
+        console.log(url);
+        return $http.jsonp(url);
+    } else {
+        return $http({
+            method: 'GET', 
+            url: 'app/stockItem.php',
+            params: {
+              id: idIn
+            }
+        });
+    }
   };
  
   return storeAPI;

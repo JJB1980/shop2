@@ -31,6 +31,10 @@ if (isset($_SESSION['ClientName']))
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
 
   <link rel="stylesheet" href="css/app.css"/>
+
+<script language="javascript">
+	var _LOCAL = <?php echo $GLOBALS["_LOCAL"]; ?>;
+</script>
   
 </head>
 

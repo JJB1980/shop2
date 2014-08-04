@@ -24,10 +24,13 @@ $adminUser="ADMINSQLUSR";
 $adminPassword="rty654";
 $adminData="adminData";
 $adminLoc="localhost";
+$GLOBALS["_LOCAL"] = "true";
 /*
 $adminUser="jjbsw_root";
 $adminPassword="fender71";
 $adminData="jjbswcom_admin";
+$GLOBALS["_LOCAL"] = "false";
+
 */
 
 $_SESSION["adminUser"] = $adminUser;

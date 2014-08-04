@@ -32,8 +32,8 @@ $response["ID"] = $r["ID"];
 $response["Name"] = $r["Name"];
 $response["Description"] = $r["Description"];
 $response["Price"] = $r["Price"];
-$response["Available"] = $r["AvailableItems"];	
-$response["Code"] = $r["StoreCode"];	
+$response["AvailableItems"] = $r["AvailableItems"];	
+$response["StoreCode"] = $r["StoreCode"];	
 $mf = $conn->val("select ManufacturerName from Manufacturers where ManufacturerCode='".$r['Manufacturer']."'","ManufacturerName");
 $response["Manufacturer"] = $mf;
 $sz = $conn->val("select SizeName from Sizes where SizeCode='".$r['Size']."'","SizeName");	
@@ -68,6 +68,7 @@ while ($ir = $conn->row()) {
 		$image["imgSrc"] = $img; // ."?" .rand(1000,10000000);
 		$image["imgHeight"] = $newHeight;
 		$image["imgWidth"] = $newWidth;
+		/*
 		if ($i === 1) {
 			list($width, $height, $type, $attr) = getimagesize($file); 
 			$aspect = $width / $height;
@@ -77,6 +78,7 @@ while ($ir = $conn->row()) {
 			$response["imgHeight"] = $newHeight;
 			$response["imgWidth"] = $newWidth;
 		}
+		*/
 		array_push($response["Images"],$image);				 
 	}
 }	
